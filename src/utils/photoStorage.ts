@@ -146,14 +146,8 @@ export async function getAllStoredPhotos(): Promise<Record<string, string>> {
 // Generate candidate paths to check for the image file
 export function getPhotoUrlCandidates(fileName: string): string[] {
   const encoded = encodeURIComponent(fileName);
-  return [
-    `/photos/${fileName}`,
-    `/photos/${encoded}`,
-    `/${fileName}`,
-    `/${encoded}`,
-    `/images/${fileName}`,
-    `/assets/${fileName}`,
-    `./photos/${fileName}`,
-    `./${fileName}`,
-  ];
+return [
+  `/photos/${encoded}`,
+  `/photos/${fileName}`,
+];
 }
