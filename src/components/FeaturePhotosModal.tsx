@@ -6,6 +6,7 @@ import {
   setFeaturedTopPhotos,
   resetFeaturedTopPhotos,
 } from '../utils/featuredPhotos';
+import { getCustomGalleryPhotos } from '../utils/customPhotoAssignments';
 import { PortfolioImage } from './PortfolioImage';
 
 interface FeaturePhotosModalProps {
@@ -27,7 +28,8 @@ export const FeaturePhotosModal: React.FC<FeaturePhotosModalProps> = ({
 
   if (!isOpen) return null;
 
-  const allAvailablePhotos = [...galleryPhotos];
+  const customPhotos = getCustomGalleryPhotos();
+  const allAvailablePhotos = [...customPhotos, ...galleryPhotos];
 
   const handleToggle = (fileName: string) => {
     if (selected.includes(fileName)) {

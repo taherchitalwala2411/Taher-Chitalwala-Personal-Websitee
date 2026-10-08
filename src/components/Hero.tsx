@@ -10,11 +10,14 @@ import {
   Pause,
   Sparkles,
   SlidersHorizontal,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { personalInfo, galleryPhotos } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
-import { getFeaturedTopPhotos } from '../utils/featuredPhotos';
+import { getFeaturedTopPhotos, toggleFeaturedTopPhoto } from '../utils/featuredPhotos';
 import { FeaturePhotosModal } from './FeaturePhotosModal';
+import { PhotoPickerModal } from './PhotoPickerModal';
 
 interface HeroProps {
   onExplore: () => void;
@@ -32,6 +35,7 @@ export const Hero: React.FC<HeroProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isManageModalOpen, setIsManageModalOpen] = useState<boolean>(false);
+  const [isAddPickerOpen, setIsAddPickerOpen] = useState<boolean>(false);
 
   // Sync featured photos
   useEffect(() => {
@@ -60,7 +64,7 @@ export const Hero: React.FC<HeroProps> = ({
 
   const currentFileName = featuredPhotos[currentIndex] || personalInfo.heroPhoto;
   const currentMeta = galleryPhotos.find((p) => p.fileName === currentFileName) || {
-    title: 'Featured Milestone & Leadership',
+    title: 'Featured Milestone Highlight',
     category: 'Featured Highlight',
     description: '',
   };
@@ -73,6 +77,23 @@ export const Hero: React.FC<HeroProps> = ({
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     setCurrentIndex((prev) => (prev + 1) % featuredPhotos.length);
+  };
+
+  const handleRemoveCurrentFromTop = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (featuredPhotos.length <= 1) return;
+    toggleFeaturedTopPhoto(currentFileName);
+  };
+
+  const handleAddPhotoToTop = (fileName: string) => {
+    if (!featuredPhotos.includes(fileName)) {
+      toggleFeaturedTopPhoto(fileName);
+    }
+    const updated = getFeaturedTopPhotos();
+    const newIdx = updated.indexOf(fileName);
+    if (newIdx !== -1) {
+      setCurrentIndex(newIdx);
+    }
   };
 
   const journeyPillars = [
@@ -94,16 +115,17 @@ export const Hero: React.FC<HeroProps> = ({
   return (
     <>
       <section className="relative pt-24 pb-14 md:pt-32 md:pb-18 overflow-hidden bg-gradient-to-b from-[#F6F3EB] via-[#FAF9F5] to-[#FAF9F5] dark:from-[#161513] dark:via-[#121110] dark:to-[#121110] border-b border-stone-200/70 dark:border-stone-800 transition-colors duration-300">
-        {/* Modern ambient visual background — adapts to dark & light modes */}
+        {/* Modern ambient visual background */}
         <div className="absolute top-0 right-1/4 w-[32rem] h-[32rem] bg-[#8B1E28]/[0.035] dark:bg-[#8B1E28]/[0.07] rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-1/4 left-10 w-80 h-80 bg-amber-500/[0.03] dark:bg-amber-500/[0.05] rounded-full blur-3xl pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(#d6d3d1_1px,transparent_1px)] dark:bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Column: Expressive Personal Narrative */}
-            <div className="lg:col-span-6 flex flex-col justify-center">
-              {/* Location Badge (BBA Digital Business removed per user request) */}
+          {/* Expanded 5:7 column split to eliminate empty white space */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            {/* Left Column: Expressive Personal Narrative (5 cols) */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              {/* Location Badge */}
               <div className="flex items-center gap-2 mb-4">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-stone-900 dark:bg-stone-100 text-stone-100 dark:text-stone-950 text-xs font-semibold tracking-wide shadow-xs">
                   <MapPin className="w-3.5 h-3.5 text-[#E11D48]" />
@@ -116,7 +138,7 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
 
               {/* Main Name */}
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 uppercase leading-[1.05] text-balance">
+              <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 uppercase leading-[1.05] text-balance">
                 {personalInfo.fullName}
               </h1>
 
@@ -136,7 +158,7 @@ export const Hero: React.FC<HeroProps> = ({
                 </p>
               </div>
 
-              {/* Quick Journey Navigation Strip — purposeful, interactive */}
+              {/* Quick Journey Navigation Strip */}
               <div className="mb-7">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500 dark:text-stone-400 font-bold">
@@ -183,31 +205,42 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
             </div>
 
-            {/* Right Column: MULTI-PHOTO FEATURED SHOWCASE WITH BATCH EDITING */}
-            <div className="lg:col-span-6">
-              <div className="relative mx-auto max-w-lg lg:max-w-none bg-white/95 dark:bg-stone-900/95 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-xl overflow-hidden p-3.5 sm:p-4.5 backdrop-blur-xs transition-colors">
+            {/* Right Column: EXPANDED MULTI-PHOTO FEATURED SHOWCASE (7 cols) */}
+            <div className="lg:col-span-7 w-full">
+              <div className="relative w-full bg-white/95 dark:bg-stone-900/95 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-xl overflow-hidden p-4 sm:p-5 backdrop-blur-xs transition-colors">
                 {/* Header Bar of the Multi-Photo Showcase */}
-                <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800 text-xs gap-2">
+                <div className="flex items-center justify-between pb-3.5 border-b border-stone-100 dark:border-stone-800 text-xs gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 font-bold text-stone-900 dark:text-stone-100">
-                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                      <span>Top Showcase</span>
+                    <span className="flex items-center gap-1.5 font-bold text-stone-900 dark:text-stone-100">
+                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                      <span className="text-sm">Top Showcase</span>
                     </span>
-                    <span className="font-mono text-[11px] px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60 font-semibold">
+                    <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60 font-semibold">
                       {currentIndex + 1} / {featuredPhotos.length}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-1.5">
+                    {/* Quick + Add Photo Button */}
+                    <button
+                      type="button"
+                      onClick={() => setIsAddPickerOpen(true)}
+                      title="Add a photo to the top showcase"
+                      className="px-2.5 py-1.5 rounded-lg bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 hover:bg-stone-800 dark:hover:bg-white/90 font-bold text-xs flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Photo</span>
+                    </button>
+
                     {/* Feature Multiple Photos at Once Modal Button */}
                     <button
                       type="button"
                       onClick={() => setIsManageModalOpen(true)}
-                      title="Select multiple photos to feature at top"
-                      className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-amber-100 dark:hover:bg-amber-950/50 hover:text-amber-900 dark:hover:text-amber-300 text-stone-700 dark:text-stone-300 font-semibold text-[11px] flex items-center gap-1 transition-colors cursor-pointer border border-stone-200/70 dark:border-stone-700"
+                      title="Manage which photos are featured at top"
+                      className="px-2.5 py-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-amber-100 dark:hover:bg-amber-950/50 hover:text-amber-900 dark:hover:text-amber-300 text-stone-700 dark:text-stone-300 font-semibold text-xs flex items-center gap-1 transition-colors cursor-pointer border border-stone-200/70 dark:border-stone-700"
                     >
-                      <SlidersHorizontal className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-                      <span>Feature Photos</span>
+                      <SlidersHorizontal className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                      <span className="hidden sm:inline">Manage All</span>
                     </button>
 
                     {/* Play / Pause Slideshow */}
@@ -217,7 +250,7 @@ export const Hero: React.FC<HeroProps> = ({
                       title={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
                       className="p-1.5 rounded-md text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
                     >
-                      {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                      {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     </button>
 
                     {/* Previous / Next buttons */}
@@ -227,7 +260,7 @@ export const Hero: React.FC<HeroProps> = ({
                       title="Previous photo"
                       className="p-1.5 rounded-md text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
                     >
-                      <ChevronLeft className="w-4 h-4" />
+                      <ChevronLeft className="w-4.5 h-4.5" />
                     </button>
 
                     <button
@@ -236,22 +269,22 @@ export const Hero: React.FC<HeroProps> = ({
                       title="Next photo"
                       className="p-1.5 rounded-md text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
                     >
-                      <ChevronRight className="w-4 h-4" />
+                      <ChevronRight className="w-4.5 h-4.5" />
                     </button>
                   </div>
                 </div>
 
-                {/* Main Focal Photo Frame with Built-in Resizing & Framing Controls */}
-                <div className="relative mt-3 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700 cursor-pointer shadow-inner">
+                {/* Substantially Larger Photo Frame */}
+                <div className="relative mt-3.5 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700 cursor-pointer shadow-inner">
                   <PortfolioImage
                     fileName={currentFileName}
                     alt={currentMeta.title}
                     title={currentMeta.title}
                     category={currentMeta.category}
-                    aspectRatioClass="aspect-[4/3] sm:aspect-[16/11]"
+                    aspectRatioClass="aspect-[16/10] min-h-[380px] sm:min-h-[460px] md:min-h-[490px] w-full"
                     priority={true}
                     defaultFit={
-                      ['Trophies.jpeg', 'Headboy image.jpeg', 'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg', 'with Nadir Godrej.jpeg'].includes(currentFileName)
+                      ['Head boy image 2.jpeg', 'Trophies.jpeg', 'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg', 'with Nadir Godrej.jpeg'].includes(currentFileName)
                         ? 'contain'
                         : 'cover'
                     }
@@ -264,39 +297,52 @@ export const Hero: React.FC<HeroProps> = ({
                       <button
                         type="button"
                         onClick={handlePrev}
-                        className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-md"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-md"
                         aria-label="Previous image"
                       >
-                        <ChevronLeft className="w-4 h-4" />
+                        <ChevronLeft className="w-5 h-5" />
                       </button>
                       <button
                         type="button"
                         onClick={handleNext}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-md"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-md"
                         aria-label="Next image"
                       >
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-5 h-5" />
                       </button>
                     </>
                   )}
                 </div>
 
-                {/* Caption & Metadata Bar */}
-                <div className="pt-3 pb-1 flex items-start justify-between gap-3">
+                {/* Caption & Metadata Bar with Quick Actions */}
+                <div className="pt-3.5 pb-1 flex items-start justify-between gap-3">
                   <div className="overflow-hidden">
-                    <p className="text-xs font-bold text-stone-950 dark:text-stone-100 truncate">
+                    <p className="text-sm font-bold text-stone-950 dark:text-stone-50 truncate">
                       {currentMeta.title}
                     </p>
-                    <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 truncate font-mono">
+                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 truncate font-mono">
                       {currentMeta.category || 'Featured'} · {currentFileName}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
+                    {/* Option to Remove this Photo from Top Showcase */}
+                    {featuredPhotos.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveCurrentFromTop}
+                        title="Remove this photo from top showcase"
+                        className="text-xs text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Remove from Top</span>
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
-                      className="text-[11px] font-semibold text-[#8B1E28] dark:text-[#E11D48] hover:underline whitespace-nowrap cursor-pointer"
+                      className="text-xs font-semibold text-[#8B1E28] dark:text-[#E11D48] hover:underline whitespace-nowrap cursor-pointer"
                     >
                       Expand
                     </button>
@@ -305,21 +351,32 @@ export const Hero: React.FC<HeroProps> = ({
 
                 {/* Multi-Photo Filmstrip / Thumbnails Selector */}
                 {featuredPhotos.length > 1 && (
-                  <div className="mt-3 pt-3 border-t border-stone-100 dark:border-stone-800">
+                  <div className="mt-3.5 pt-3.5 border-t border-stone-100 dark:border-stone-800">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 font-bold">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 font-bold">
                         Featured Strip ({featuredPhotos.length} Active)
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setIsManageModalOpen(true)}
-                        className="text-[10px] text-amber-700 dark:text-amber-400 hover:underline font-semibold cursor-pointer"
-                      >
-                        + Manage Selection
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setIsAddPickerOpen(true)}
+                          className="text-[11px] text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white font-semibold flex items-center gap-0.5 cursor-pointer"
+                        >
+                          <Plus className="w-3 h-3" />
+                          <span>Add Photo</span>
+                        </button>
+                        <span className="text-stone-300 dark:text-stone-700">·</span>
+                        <button
+                          type="button"
+                          onClick={() => setIsManageModalOpen(true)}
+                          className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline font-semibold cursor-pointer"
+                        >
+                          Manage Selection
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                    <div className="flex items-center gap-2.5 overflow-x-auto pb-1 scrollbar-none">
                       {featuredPhotos.map((file, fIdx) => {
                         const isActive = fIdx === currentIndex;
                         return (
@@ -330,7 +387,7 @@ export const Hero: React.FC<HeroProps> = ({
                               setCurrentIndex(fIdx);
                               setIsPlaying(false);
                             }}
-                            className={`relative w-14 h-11 sm:w-16 sm:h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                            className={`relative w-16 h-12 sm:w-20 sm:h-14 rounded-lg overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
                               isActive
                                 ? 'border-[#8B1E28] dark:border-[#E11D48] ring-2 ring-[#8B1E28]/20 dark:ring-[#E11D48]/30 scale-105 shadow-sm'
                                 : 'border-stone-200 dark:border-stone-700 opacity-60 hover:opacity-100 hover:border-stone-400 dark:hover:border-stone-500'
@@ -362,6 +419,15 @@ export const Hero: React.FC<HeroProps> = ({
       <FeaturePhotosModal
         isOpen={isManageModalOpen}
         onClose={() => setIsManageModalOpen(false)}
+      />
+
+      {/* Add Photo to Top Showcase Picker Modal */}
+      <PhotoPickerModal
+        isOpen={isAddPickerOpen}
+        onClose={() => setIsAddPickerOpen(false)}
+        title="Add Photo to Top Showcase"
+        currentPhotoName={null}
+        onSelectPhoto={handleAddPhotoToTop}
       />
     </>
   );

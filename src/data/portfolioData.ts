@@ -27,7 +27,7 @@ export const personalInfo = {
       'https://www.linkedin.com/in/taher-chitalwala-513107305?utm_source=share_via&utm_content=profile&utm_medium=member_android',
     linkedinLabel: 'linkedin.com/in/taher-chitalwala-513107305',
   },
-  heroPhoto: 'Head boy image 2.jpeg',
+  heroPhoto: 'IIMUN event 2.jpeg',
   trophiesPhoto: 'Trophies.jpeg',
 };
 
@@ -38,6 +38,7 @@ export const defaultTopPhotos = [
   'NIE TOI 2.jpeg',
   'with Nadir Godrej.jpeg',
   'SBFL winning.jpeg',
+  'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
 ];
 
 export const aboutMeNarrative = [
@@ -394,6 +395,15 @@ export const projectsList: ProjectItem[] = [
 
 export const galleryPhotos: GalleryPhoto[] = [
   {
+    id: 'photo-headboy-flag',
+    fileName: 'Head boy image 2.jpeg',
+    title: 'Investiture & School Flag Ceremony',
+    category: 'Speaking & Leadership',
+    description:
+      'Holding the school flag proudly alongside fellow house captains, teachers, and police guests during the official investiture ceremony.',
+    featured: true,
+  },
+  {
     id: 'photo-headboy-sports',
     fileName: 'Headboy image.jpeg',
     title: 'Leading the School from the Front',
@@ -401,14 +411,6 @@ export const galleryPhotos: GalleryPhoto[] = [
     description:
       'Addressing the school during athletic events with microphone in hand, representing Saifi High School as Head Boy (#280).',
     featured: true,
-  },
-  {
-    id: 'photo-headboy-flag',
-    fileName: 'Head boy image 2.jpeg',
-    title: 'Investiture & School Flag Ceremony',
-    category: 'Speaking & Leadership',
-    description:
-      'Holding the school flag proudly alongside fellow house captains, teachers, and police guests during the official investiture ceremony.',
   },
   {
     id: 'photo-nie-toi-stage',

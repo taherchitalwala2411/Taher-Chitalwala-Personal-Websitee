@@ -60,9 +60,9 @@ export const PhotoManagerModal: React.FC<PhotoManagerModalProps> = ({
 
   // Expected photos in portfolio (removed Dr Batra, podium, and portrait per user instructions)
   const expectedPhotos = [
+    'Head boy image 2.jpeg',
     'NIE TOI 2.jpeg',
     'Headboy image.jpeg',
-    'Head boy image 2.jpeg',
     'SBFL winning.jpeg',
     'Trophies.jpeg',
     'IIMUN EVENT 1.jpeg',

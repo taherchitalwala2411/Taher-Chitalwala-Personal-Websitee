@@ -143,34 +143,38 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             </div>
 
             {/* Key Findings */}
-            <div className="mt-8">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3">
-                Key Findings & Core Insights
-              </h4>
-              <div className="space-y-2.5">
-                {selectedProject.keyFindings.map((finding, fIdx) => (
-                  <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
-                    <CheckCircle2 className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48] shrink-0 mt-0.5" />
-                    <span>{finding}</span>
-                  </div>
-                ))}
+            {selectedProject.keyFindings && selectedProject.keyFindings.length > 0 && (
+              <div className="mt-8">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3">
+                  Key Findings & Core Insights
+                </h4>
+                <div className="space-y-2.5">
+                  {selectedProject.keyFindings.map((finding, fIdx) => (
+                    <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
+                      <CheckCircle2 className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48] shrink-0 mt-0.5" />
+                      <span>{finding}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Practical Learnings */}
-            <div className="mt-8">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3">
-                Practical Methodology & Execution
-              </h4>
-              <div className="space-y-2.5">
-                {selectedProject.keyLearnings.map((learning, lIdx) => (
-                  <div key={lIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
-                    <span className="text-[#8B1E28] dark:text-[#E11D48] font-bold">·</span>
-                    <span>{learning}</span>
-                  </div>
-                ))}
+            {selectedProject.keyLearnings && selectedProject.keyLearnings.length > 0 && (
+              <div className="mt-8">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3">
+                  Practical Methodology & Execution
+                </h4>
+                <div className="space-y-2.5">
+                  {selectedProject.keyLearnings.map((learning, lIdx) => (
+                    <div key={lIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
+                      <span className="text-[#8B1E28] dark:text-[#E11D48] font-bold">·</span>
+                      <span>{learning}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Tags & Close */}
             <div className="mt-10 pt-6 border-t border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">

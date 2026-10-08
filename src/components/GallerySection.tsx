@@ -5,12 +5,22 @@ import {
   ZoomIn,
   SlidersHorizontal,
   Sparkles,
+  Plus,
+  Trash2,
+  RotateCcw,
 } from 'lucide-react';
 import { galleryPhotos } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
 import { GalleryPhoto } from '../types/portfolio';
 import { getFeaturedTopPhotos, toggleFeaturedTopPhoto } from '../utils/featuredPhotos';
 import { FeaturePhotosModal } from './FeaturePhotosModal';
+import { AddPhotoToGalleryModal } from './AddPhotoToGalleryModal';
+import {
+  getCustomGalleryPhotos,
+  getHiddenGalleryPhotoIds,
+  hideGalleryPhoto,
+  unhideGalleryPhoto,
+} from '../utils/customPhotoAssignments';
 
 interface GallerySectionProps {
   isFullView?: boolean;
@@ -26,17 +36,25 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [featuredTopPhotos, setFeaturedTopPhotos] = useState<string[]>(getFeaturedTopPhotos());
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [lastRemovedPhotoId, setLastRemovedPhotoId] = useState<string | null>(null);
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
+  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false);
 
-  // Sync featured photos
+  // Version counter to trigger re-renders on assignment updates
+  const [galleryVersion, setGalleryVersion] = useState(0);
+
+  // Sync featured photos & assignment updates
   useEffect(() => {
     const handleUpdate = () => {
       setFeaturedTopPhotos(getFeaturedTopPhotos());
+      setGalleryVersion((v) => v + 1);
     };
 
     window.addEventListener('portfolio-top-photos-updated', handleUpdate);
+    window.addEventListener('taher-photo-assignments-updated', handleUpdate);
     return () => {
       window.removeEventListener('portfolio-top-photos-updated', handleUpdate);
+      window.removeEventListener('taher-photo-assignments-updated', handleUpdate);
     };
   }, []);
 
@@ -52,6 +70,31 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  const handleRemoveFromGallery = (photo: GalleryPhoto, e: React.MouseEvent) => {
+    e.stopPropagation();
+    hideGalleryPhoto(photo.id);
+    setLastRemovedPhotoId(photo.id);
+    setToastMessage(`Removed "${photo.title}" from gallery.`);
+    setTimeout(() => setToastMessage(null), 5000);
+  };
+
+  const handleUndoRemove = () => {
+    if (lastRemovedPhotoId) {
+      unhideGalleryPhoto(lastRemovedPhotoId);
+      setLastRemovedPhotoId(null);
+      setToastMessage('Photo restored to gallery.');
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+  };
+
+  const hiddenIds = getHiddenGalleryPhotoIds();
+  const customPhotos = getCustomGalleryPhotos();
+
+  // Combine custom uploaded photos and base gallery photos, filtering hidden ones
+  const allAvailablePhotos: GalleryPhoto[] = [...customPhotos, ...galleryPhotos].filter(
+    (p) => !hiddenIds.includes(p.id)
+  );
+
   const categories = [
     'All',
     '★ Featured at Top',
@@ -64,30 +107,39 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
 
   const filteredPhotos = isFullView
     ? selectedCategory === 'All'
-      ? galleryPhotos
+      ? allAvailablePhotos
       : selectedCategory === '★ Featured at Top'
-      ? galleryPhotos.filter((p) => featuredTopPhotos.includes(p.fileName))
-      : galleryPhotos.filter((p) => p.category === selectedCategory)
-    : galleryPhotos
+      ? allAvailablePhotos.filter((p) => featuredTopPhotos.includes(p.fileName))
+      : allAvailablePhotos.filter((p) => p.category === selectedCategory)
+    : allAvailablePhotos
         .filter((p) =>
           p.featured ||
-          ['NIE TOI 2.jpeg', 'SBFL winning.jpeg', 'with Nadir Godrej.jpeg', 'Trophies.jpeg', 'IIMUN event 2.jpeg', 'Head boy image 2.jpeg'].includes(p.fileName)
+          ['Head boy image 2.jpeg', 'NIE TOI 2.jpeg', 'SBFL winning.jpeg', 'with Nadir Godrej.jpeg', 'Trophies.jpeg', 'IIMUN event 2.jpeg'].includes(p.fileName)
         )
         .slice(0, 6);
 
   return (
     <>
       <section id="gallery" className="py-16 md:py-22 border-t border-stone-200/80 dark:border-stone-800 bg-gradient-to-b from-[#FAF9F5] via-[#F6F3EB] to-[#FAF9F5] dark:from-[#121110] dark:via-[#161513] dark:to-[#121110] relative transition-colors duration-300">
-        {/* Toast Notification */}
+        {/* Toast Notification with Undo */}
         {toastMessage && (
           <div className="fixed top-20 right-6 z-50 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 text-xs font-semibold animate-in fade-in slide-in-from-top-2 duration-200 border border-stone-700 dark:border-stone-300">
             <Star className="w-4 h-4 text-amber-400 dark:text-amber-500 fill-amber-400 dark:fill-amber-500 shrink-0" />
             <span>{toastMessage}</span>
+            {lastRemovedPhotoId && (
+              <button
+                type="button"
+                onClick={handleUndoRemove}
+                className="ml-2 underline text-amber-300 dark:text-amber-600 hover:text-white cursor-pointer font-bold"
+              >
+                Undo
+              </button>
+            )}
           </div>
         )}
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
-          {/* Header */}
+          {/* Header with Photo Management Actions */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48]">
@@ -99,6 +151,16 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
+              {/* Option to Add New Photo to Gallery */}
+              <button
+                type="button"
+                onClick={() => setIsAddPhotoModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-white text-white dark:text-stone-950 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ Add Photo to Gallery</span>
+              </button>
+
               {/* Select Multiple at Once button */}
               <button
                 type="button"
@@ -106,12 +168,12 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 hover:bg-amber-500/20 dark:hover:bg-amber-500/30 text-amber-900 dark:text-amber-300 border border-amber-500/30 dark:border-amber-500/40 text-xs font-bold transition-all shadow-2xs cursor-pointer"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
-                <span>Feature Multiple Photos at Top</span>
+                <span>Feature Multiple at Top</span>
               </button>
 
               <div className="flex items-center gap-2 text-xs font-mono text-stone-700 dark:text-stone-300 bg-white dark:bg-stone-900 px-3 py-2 rounded-xl border border-stone-200/90 dark:border-stone-800 shadow-2xs">
                 <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                <span>{featuredTopPhotos.length} Featured at Top</span>
+                <span>{featuredTopPhotos.length} at Top</span>
               </div>
             </div>
           </div>
@@ -140,36 +202,18 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             </div>
           )}
 
-          {/* Well-balanced Photo Grid */}
+          {/* Well-balanced Photo Grid with Add & Remove Controls */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPhotos.map((photo) => {
               const isFeatured = featuredTopPhotos.includes(photo.fileName);
 
-              // Specific sizing rules for photos that need contain framing
               const isContainPhoto = [
+                'Head boy image 2.jpeg',
                 'Trophies.jpeg',
                 'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
                 'Headboy image.jpeg',
                 'with Nadir Godrej.jpeg',
               ].includes(photo.fileName);
-
-              const isNadirGodrej = photo.fileName === 'with Nadir Godrej.jpeg';
-              const isHeadboySpeaking = photo.fileName === 'Headboy image.jpeg';
-              const isBathinda = photo.fileName === 'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg';
-
-              let aspectClass = 'aspect-[4/3]';
-              if (isContainPhoto) {
-                aspectClass = 'aspect-[4/3] bg-stone-50 dark:bg-stone-800/60';
-              }
-              if (isHeadboySpeaking) {
-                aspectClass = 'aspect-[4/3] sm:aspect-[4/3] bg-stone-100/70 dark:bg-stone-800/80';
-              }
-              if (isNadirGodrej) {
-                aspectClass = 'aspect-[4/3] max-h-[260px] bg-stone-50 dark:bg-stone-800/60';
-              }
-              if (isBathinda) {
-                aspectClass = 'aspect-[4/3] bg-stone-50 dark:bg-stone-800/60';
-              }
 
               return (
                 <div
@@ -182,7 +226,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                       alt={photo.title}
                       title={photo.title}
                       category={photo.category}
-                      aspectRatioClass={`${aspectClass} rounded-xl overflow-hidden`}
+                      aspectRatioClass="aspect-[4/3] rounded-xl overflow-hidden"
                       defaultFit={isContainPhoto ? 'contain' : 'cover'}
                       onClick={() =>
                         onOpenPhoto(photo.fileName, photo.title, photo.category)
@@ -220,7 +264,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                       </p>
                     </div>
 
-                    {/* Card bottom actions: Feature toggle & expand */}
+                    {/* Card bottom actions: Feature toggle, Expand, and Remove option */}
                     <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between gap-2 text-[11px]">
                       <button
                         type="button"
@@ -230,30 +274,41 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                             ? 'Remove from top homepage showcase'
                             : 'Feature in top homepage showcase'
                         }
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                        className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                           isFeatured
                             ? 'bg-amber-100 dark:bg-amber-950/50 text-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800 shadow-2xs font-bold'
                             : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-stone-100'
                         }`}
                       >
                         <Star
-                          className={`w-3.5 h-3.5 ${
+                          className={`w-3 h-3 ${
                             isFeatured ? 'fill-amber-500 text-amber-500' : 'text-stone-400 dark:text-stone-500'
                           }`}
                         />
-                        <span>{isFeatured ? '★ Featured at Top' : '+ Feature at Top'}</span>
+                        <span>{isFeatured ? '★ At Top' : '+ At Top'}</span>
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          onOpenPhoto(photo.fileName, photo.title, photo.category)
-                        }
-                        className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>Expand</span>
-                        <ZoomIn className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="flex items-center gap-2.5">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            onOpenPhoto(photo.fileName, photo.title, photo.category)
+                          }
+                          className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Expand</span>
+                          <ZoomIn className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => handleRemoveFromGallery(photo, e)}
+                          title="Remove photo from gallery"
+                          className="text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -268,7 +323,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                 onClick={onViewAll}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
               >
-                <span>Explore Complete Photo Archive ({galleryPhotos.length} Photos)</span>
+                <span>Explore Complete Photo Archive ({allAvailablePhotos.length} Photos)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -280,6 +335,16 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
       <FeaturePhotosModal
         isOpen={isManageModalOpen}
         onClose={() => setIsManageModalOpen(false)}
+      />
+
+      {/* Add Photo to Gallery Modal */}
+      <AddPhotoToGalleryModal
+        isOpen={isAddPhotoModalOpen}
+        onClose={() => setIsAddPhotoModalOpen(false)}
+        onPhotoAdded={(p) => {
+          setToastMessage(`Added "${p.title}" to gallery.`);
+          setTimeout(() => setToastMessage(null), 3500);
+        }}
       />
     </>
   );

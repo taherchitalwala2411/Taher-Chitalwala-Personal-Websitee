@@ -41,10 +41,10 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
 
   // Default fit based on photo nature (e.g. shelf, certificate, train platform)
   const isNaturallyContain = [
+    'Head boy image 2.jpeg',
     'Trophies.jpeg',
     'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
     'Headboy image.jpeg',
-    'Head boy image 2.jpeg',
     'NIE TOI 2.jpeg',
     'IIMUN event 2.jpeg',
     'with Nadir Godrej.jpeg',
