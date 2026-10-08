@@ -10,7 +10,7 @@ import {
   Pause,
   Sparkles,
   Maximize2,
-  Minimize2,
+  Square,
 } from 'lucide-react';
 import { personalInfo, galleryPhotos, defaultTopPhotos } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
@@ -32,7 +32,6 @@ export const Hero: React.FC<HeroProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [fitMode, setFitMode] = useState<'contain' | 'cover'>('contain');
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
   // Slideshow timer
   useEffect(() => {
@@ -172,7 +171,7 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Right Column: TOP SHOWCASE WITH VISITOR OPTIONS ("that's it") */}
           <div className="lg:col-span-7 w-full">
             <div className="relative w-full bg-white/95 dark:bg-stone-900/95 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-xl overflow-hidden p-4 sm:p-5 backdrop-blur-xs transition-colors">
-              {/* Header Bar with Visitor Options: Fit into Frame or Minimize */}
+              {/* Header Bar with Visitor Options: Small Frame or Full Frame */}
               <div className="flex flex-wrap items-center justify-between pb-3.5 border-b border-stone-100 dark:border-stone-800 text-xs gap-3">
                 <div className="flex items-center gap-2">
                   <span className="flex items-center gap-1.5 font-bold text-stone-900 dark:text-stone-100">
@@ -184,42 +183,41 @@ export const Hero: React.FC<HeroProps> = ({
                   </span>
                 </div>
 
-                {/* Exclusive Visitor Controls: Fitting into Frame or Minimizing ("that's it") */}
+                {/* Exclusive Visitor Choice: Small Frame (Complete) vs Full Frame (Cropped) */}
                 <div className="flex items-center gap-2">
-                  {/* Option 1: Fit into Frame */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFitMode('contain');
-                      setIsMinimized(false);
-                    }}
-                    title="Fit entire image into frame without cropping"
-                    aria-label="Fit image into frame"
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
-                      fitMode === 'contain' && !isMinimized
-                        ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
-                        : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
-                    }`}
-                  >
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>Fit to Frame</span>
-                  </button>
+                  <div className="inline-flex items-center p-0.5 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs">
+                    {/* Option 1: Small Frame (complete) */}
+                    <button
+                      type="button"
+                      onClick={() => setFitMode('contain')}
+                      title="Small Frame: Huge image appears completely without any crop"
+                      aria-label="Small Frame (complete image)"
+                      className={`px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        fitMode === 'contain'
+                          ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
+                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      }`}
+                    >
+                      <Square className="w-3 h-3" />
+                      <span>Small Frame</span>
+                    </button>
 
-                  {/* Option 2: Minimize */}
-                  <button
-                    type="button"
-                    onClick={() => setIsMinimized(!isMinimized)}
-                    title={isMinimized ? 'Restore full frame size' : 'Minimize image in frame'}
-                    aria-label="Minimize image in frame"
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
-                      isMinimized
-                        ? 'bg-amber-500 text-stone-950 shadow-xs'
-                        : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
-                    }`}
-                  >
-                    <Minimize2 className="w-3.5 h-3.5" />
-                    <span>{isMinimized ? 'Restore' : 'Minimize'}</span>
-                  </button>
+                    {/* Option 2: Full Frame (cropped) */}
+                    <button
+                      type="button"
+                      onClick={() => setFitMode('cover')}
+                      title="Full Frame: Huge image fills frame completely (could get cropped)"
+                      aria-label="Full Frame (could get cropped)"
+                      className={`px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        fitMode === 'cover'
+                          ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
+                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      }`}
+                    >
+                      <Maximize2 className="w-3 h-3" />
+                      <span>Full Frame</span>
+                    </button>
+                  </div>
 
                   {/* Play / Pause Slideshow */}
                   <button
@@ -257,9 +255,7 @@ export const Hero: React.FC<HeroProps> = ({
 
               {/* Showcase Photo Frame */}
               <div
-                className={`relative mt-3.5 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700 cursor-pointer shadow-inner transition-all duration-300 ${
-                  isMinimized ? 'scale-95' : 'scale-100'
-                }`}
+                className="relative mt-3.5 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700 cursor-pointer shadow-inner transition-all duration-300 scale-100"
               >
                 <PortfolioImage
                   fileName={currentFileName}
@@ -275,13 +271,6 @@ export const Hero: React.FC<HeroProps> = ({
                   showFitControls={false}
                   onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
                 />
-
-                {/* Minimized Indicator Watermark */}
-                {isMinimized && (
-                  <div className="absolute top-3 left-3 bg-amber-500 text-stone-950 text-[10px] font-mono font-bold px-2 py-0.5 rounded shadow-sm uppercase">
-                    Minimized View
-                  </div>
-                )}
 
                 {/* Arrow Overlays on Hover */}
                 {featuredPhotos.length > 1 && (

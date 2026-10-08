@@ -4,7 +4,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Maximize2,
-  Minimize2,
+  Square,
 } from 'lucide-react';
 import { galleryPhotos } from '../data/portfolioData';
 import { getPhoto, getPhotoUrlCandidates } from '../utils/photoStorage';
@@ -26,19 +26,19 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 }) => {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [candidateIndex, setCandidateIndex] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState<number>(1);
-  const [isContain, setIsContain] = useState<boolean>(true);
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [isContain, setIsContain] = useState<boolean>(true); // default to Small Frame (complete image)
 
   const candidates = getPhotoUrlCandidates(fileName);
 
-  // Find index in gallery photos if present
+  // Find metadata in galleryPhotos if available
+  const currentPhotoMeta = galleryPhotos.find((p) => p.fileName === fileName);
   const currentIndex = galleryPhotos.findIndex((p) => p.fileName === fileName);
-  const currentPhotoMeta = currentIndex !== -1 ? galleryPhotos[currentIndex] : null;
 
-  // Load from storage or fallback visual asset
   useEffect(() => {
     let active = true;
+    setDataUrl(null);
+    setCandidateIndex(0);
+
     getPhoto(fileName).then((stored) => {
       if (active && stored) {
         setDataUrl(stored);
@@ -82,24 +82,6 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
     title ||
     `Photograph of Taher Chitalwala: ${fileName} for blind users`;
 
-  // Fitting the image into the frame
-  const handleFitToFrame = () => {
-    setIsContain(true);
-    setZoomLevel(1);
-    setIsMinimized(false);
-  };
-
-  // Minimizing the image
-  const handleMinimize = () => {
-    if (!isMinimized) {
-      setIsMinimized(true);
-      setZoomLevel(0.72);
-    } else {
-      setIsMinimized(false);
-      setZoomLevel(1);
-    }
-  };
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-stone-950/90 backdrop-blur-md animate-in fade-in duration-200"
@@ -109,12 +91,10 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
       aria-label={title || 'Full photograph modal'}
     >
       <div
-        className={`relative max-w-5xl w-full flex flex-col bg-stone-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-800 transition-all duration-300 ${
-          isMinimized ? 'max-h-[75vh] scale-95' : 'max-h-[92vh] scale-100'
-        }`}
+        className="relative max-w-5xl w-full flex flex-col bg-stone-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-800 transition-all duration-300 max-h-[92vh] scale-100"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Control Bar with Exclusive "Fit into Frame" and "Minimize" visitor options ("that's it") */}
+        {/* Top Control Bar with Exclusive Choice: Small Frame (Complete) vs Full Frame (Cropped) */}
         <div className="p-3.5 sm:p-4 bg-stone-950 border-b border-stone-800 flex items-center justify-between gap-3 text-xs text-stone-300">
           <div className="flex items-center gap-2 overflow-hidden">
             <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-stone-800 text-stone-300 font-semibold shrink-0">
@@ -125,39 +105,41 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
             </span>
           </div>
 
-          {/* Visitor Action Controls */}
+          {/* Visitor Action Controls: Only Option is Small Frame vs Full Frame */}
           <div className="flex items-center gap-2">
-            {/* Option 1: Fitting the image into the frame */}
-            <button
-              type="button"
-              onClick={handleFitToFrame}
-              title="Fit entire image into frame without cropping"
-              aria-label="Fit entire image into frame without cropping"
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                isContain && !isMinimized
-                  ? 'bg-white text-stone-950 shadow-xs'
-                  : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
-              }`}
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span>Fit into Frame</span>
-            </button>
+            <div className="inline-flex items-center p-0.5 rounded-xl bg-stone-900 border border-stone-800 shadow-xs">
+              {/* Option 1: Small Frame where huge image appears completely */}
+              <button
+                type="button"
+                onClick={() => setIsContain(true)}
+                title="Small Frame: Huge image appears completely without any crop"
+                aria-label="Small Frame (complete image)"
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isContain
+                    ? 'bg-white text-stone-950 shadow-xs font-bold'
+                    : 'text-stone-400 hover:text-stone-200'
+                }`}
+              >
+                <Square className="w-3.5 h-3.5" />
+                <span>Small Frame (Complete)</span>
+              </button>
 
-            {/* Option 2: Minimizing the image */}
-            <button
-              type="button"
-              onClick={handleMinimize}
-              title={isMinimized ? 'Restore full frame size' : 'Minimize image in frame'}
-              aria-label={isMinimized ? 'Restore full frame size' : 'Minimize image in frame'}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                isMinimized
-                  ? 'bg-amber-500 text-stone-950 shadow-xs'
-                  : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
-              }`}
-            >
-              <Minimize2 className="w-3.5 h-3.5" />
-              <span>{isMinimized ? 'Restore' : 'Minimize'}</span>
-            </button>
+              {/* Option 2: Full Frame where huge image could get cropped */}
+              <button
+                type="button"
+                onClick={() => setIsContain(false)}
+                title="Full Frame: Huge image fills frame completely (could get cropped)"
+                aria-label="Full Frame (could get cropped)"
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  !isContain
+                    ? 'bg-white text-stone-950 shadow-xs font-bold'
+                    : 'text-stone-400 hover:text-stone-200'
+                }`}
+              >
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span>Full Frame (Cropped)</span>
+              </button>
+            </div>
 
             {/* Close Button */}
             <button
@@ -173,29 +155,21 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         </div>
 
         {/* Media Frame showing the Photo */}
-        <div className="relative flex-1 min-h-[320px] max-h-[66vh] bg-stone-950 flex items-center justify-center p-4 overflow-auto">
-          <div
-            className="transition-transform duration-200 flex items-center justify-center max-h-full max-w-full"
-            style={{ transform: `scale(${zoomLevel})` }}
-          >
+        <div className="relative flex-1 min-h-[320px] max-h-[66vh] bg-stone-950 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+          <div className="w-full h-full flex items-center justify-center overflow-hidden">
             <img
               src={currentSrc}
               alt={accessibleAltText}
               aria-label={accessibleAltText}
               role="img"
               onError={handleImageError}
-              className={`max-h-[60vh] max-w-full rounded-lg shadow-2xl transition-all duration-300 ${
-                isContain ? 'object-contain' : 'object-cover'
+              className={`rounded-lg shadow-2xl transition-all duration-300 ${
+                isContain
+                  ? 'max-h-[60vh] max-w-full object-contain mx-auto'
+                  : 'w-full h-[60vh] object-cover'
               }`}
             />
           </div>
-
-          {/* Minimized Watermark Indicator */}
-          {isMinimized && (
-            <div className="absolute top-4 left-4 bg-amber-500/90 text-stone-950 px-2.5 py-1 rounded text-[10px] font-mono font-bold uppercase shadow-sm">
-              Minimized Scale (72%)
-            </div>
-          )}
         </div>
 
         {/* Caption Bar with Alt Description Display for Blind / Accessibility Users */}
@@ -214,7 +188,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
             <div className="shrink-0 flex items-center gap-2">
               <span className="text-[10px] font-mono px-2 py-1 rounded bg-stone-900 border border-stone-800 text-stone-400">
-                {isContain ? 'Fitted in Frame' : 'Cover'}
+                {isContain ? 'Small Frame Mode (Complete)' : 'Full Frame Mode (Cropped)'}
               </span>
             </div>
           </div>
