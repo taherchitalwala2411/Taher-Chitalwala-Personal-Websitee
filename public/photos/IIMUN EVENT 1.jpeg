@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+      <defs>
+        <linearGradient id="arch-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#4C0519" />
+          <stop offset="60%" stop-color="#881337" />
+          <stop offset="100%" stop-color="#1C1917" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="url(#arch-bg)" />
+
+      <!-- Grand Decorative Conference Entrance Arch -->
+      <path d="M 150 800 L 150 350 Q 600 80 1050 350 L 1050 800" stroke="#FDE047" stroke-width="24" fill="none" opacity="0.8" />
+      <text x="600" y="240" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="34" fill="#FAF9F5" text-anchor="middle" letter-spacing="4">I.I.M.U.N. FAMILY</text>
+      <text x="600" y="280" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#FDE047" text-anchor="middle">ORGANIZING COMMITTEE &amp; DELEGATES</text>
+
+      <!-- Organizing Committee Family Crowd -->
+      <g transform="translate(600, 560)">
+        <circle cx="-300" cy="-20" r="30" fill="#FEF3C7" /><rect x="-325" y="15" width="50" height="150" fill="#0F172A" rx="8" />
+        <circle cx="-200" cy="-30" r="30" fill="#FEF3C7" /><rect x="-225" y="5" width="50" height="160" fill="#881337" rx="8" />
+        <circle cx="-100" cy="-40" r="32" fill="#FEF3C7" /><rect x="-125" y="-5" width="50" height="170" fill="#0F172A" rx="8" />
+        <!-- Taher in Center -->
+        <circle cx="0" cy="-50" r="36" fill="#FEF3C7" stroke="#FDE047" stroke-width="2" /><rect x="-30" y="-12" width="60" height="180" fill="#881337" rx="10" />
+        <circle cx="100" cy="-40" r="32" fill="#FEF3C7" /><rect x="75" y="-5" width="50" height="170" fill="#0F172A" rx="8" />
+        <circle cx="200" cy="-30" r="30" fill="#FEF3C7" /><rect x="175" y="5" width="50" height="160" fill="#881337" rx="8" />
+        <circle cx="300" cy="-20" r="30" fill="#FEF3C7" /><rect x="275" y="15" width="50" height="150" fill="#0F172A" rx="8" />
+      </g>
+
+      <!-- Badge Overlay -->
+      <rect x="80" y="60" width="370" height="58" rx="29" fill="#1C1917" opacity="0.9" stroke="#FDE047" stroke-width="1.5" />
+      <text x="110" y="96" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="16" fill="#FAF9F5" letter-spacing="1">CONFERENCE FAMILY</text>
+
+      <!-- Footer Info Strip -->
+      <rect x="60" y="700" width="1080" height="60" rx="14" fill="#1C1917" opacity="0.95" stroke="#881337" stroke-width="1.5" />
+      <text x="90" y="737" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#FAF9F5">IIMUN Organizing Team Under Grand Decorative Arch</text>
+      <text x="90" y="750" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="12" fill="#FDA4AF">Celebrating successful youth diplomacy conference completion</text>
+      <text x="1100" y="737" font-family="monospace" font-weight="700" font-size="14" fill="#FDE047" text-anchor="end">IIMUN ARCH</text>
+    </svg>

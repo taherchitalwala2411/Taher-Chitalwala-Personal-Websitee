@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, ZoomIn } from 'lucide-react';
+import { Camera, ZoomIn, Maximize2, Minimize2 } from 'lucide-react';
 import { getPhoto, getPhotoUrlCandidates } from '../utils/photoStorage';
 
 interface PortfolioImageProps {
@@ -13,8 +13,7 @@ interface PortfolioImageProps {
   showZoomIcon?: boolean;
   priority?: boolean;
   defaultFit?: 'cover' | 'contain';
-  showFitToggle?: boolean;
-  allowScaleControl?: boolean;
+  showFitControls?: boolean;
 }
 
 export const PortfolioImage: React.FC<PortfolioImageProps> = ({
@@ -27,46 +26,33 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
   onClick,
   showZoomIcon = true,
   priority = false,
-  defaultFit,
+  defaultFit = 'contain',
+  showFitControls = true,
 }) => {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [candidateIndex, setCandidateIndex] = useState(0);
-  const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-
-  // Default fit based on photo nature (flag ceremony, trophy shelf, award on stage)
-  const isNaturallyContain = [
-    'Head boy image 2.jpeg',
-    'Trophies.jpeg',
-    'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
-    'Headboy image.jpeg',
-    'NIE TOI 2.jpeg',
-    'IIMUN event 2.jpeg',
-    'with Nadir Godrej.jpeg',
-    'IIMUN event 6.jpeg',
-  ].includes(fileName);
-
-  const fitMode = defaultFit || (isNaturallyContain ? 'contain' : 'cover');
+  const [fitMode, setFitMode] = useState<'contain' | 'cover'>(defaultFit);
+  const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
   const candidates = getPhotoUrlCandidates(fileName);
 
-  // Check IndexedDB first
+  // Load photo: checks IndexedDB, localStorage, or rich visual asset fallback
   useEffect(() => {
     let mounted = true;
     getPhoto(fileName).then((stored) => {
       if (mounted && stored) {
         setDataUrl(stored);
-        setHasError(false);
+        setIsLoaded(true);
       }
     });
 
     const handleUpdate = (e: Event) => {
-      const custom = e as CustomEvent<{ fileName: string }>;
+      const custom = e as CustomEvent<{ fileName: string; dataUrl?: string }>;
       if (custom.detail?.fileName === fileName) {
         getPhoto(fileName).then((stored) => {
           if (mounted && stored) {
             setDataUrl(stored);
-            setHasError(false);
             setIsLoaded(true);
           }
         });
@@ -86,17 +72,35 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
     if (!dataUrl && candidateIndex < candidates.length - 1) {
       setCandidateIndex((prev) => prev + 1);
     } else {
-      setHasError(true);
+      // If candidates fail, pull the guaranteed visual asset
+      getPhoto(fileName).then((stored) => {
+        if (stored) {
+          setDataUrl(stored);
+          setIsLoaded(true);
+        }
+      });
     }
   };
 
   const handleImageLoad = () => {
     setIsLoaded(true);
-    setHasError(false);
   };
 
   const accessibleAltText =
-    alt || title || `Photograph of Taher Chitalwala - ${fileName}`;
+    alt || title || `Photograph of Taher Chitalwala: ${fileName} for blind users`;
+
+  // Toggle fitting the image into the frame
+  const handleToggleFit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFitMode((prev) => (prev === 'contain' ? 'cover' : 'contain'));
+    if (isMinimized) setIsMinimized(false);
+  };
+
+  // Toggle minimizing the image
+  const handleToggleMinimize = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMinimized((prev) => !prev);
+  };
 
   return (
     <div
@@ -105,75 +109,91 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
       role="region"
       aria-label={title || accessibleAltText}
     >
-      {!hasError ? (
-        <>
-          <div className="w-full h-full flex items-center justify-center overflow-hidden bg-stone-100/80 dark:bg-stone-900/80">
-            <img
-              src={currentSrc}
-              alt={accessibleAltText}
-              aria-label={accessibleAltText}
-              role="img"
-              loading={priority ? 'eager' : 'lazy'}
-              referrerPolicy="no-referrer"
-              onError={handleImageError}
-              onLoad={handleImageLoad}
-              className={`w-full h-full transition-opacity duration-300 ${
-                fitMode === 'contain' ? 'object-contain p-1' : 'object-cover'
-              } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-            />
-          </div>
-
-          {!isLoaded && (
-            <div
-              className="absolute inset-0 bg-stone-200/60 dark:bg-stone-800/60 animate-pulse flex items-center justify-center"
-              aria-hidden="true"
-            >
-              <Camera className="w-6 h-6 text-stone-400 dark:text-stone-600" />
-            </div>
-          )}
-
-          {/* Hover zoom overlay indicator for interactive expansion */}
-          {showZoomIcon && isLoaded && (
-            <div
-              className="absolute inset-0 bg-stone-950/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none"
-              aria-hidden="true"
-            >
-              <span className="p-2.5 rounded-full bg-white/95 dark:bg-stone-900/95 text-stone-900 dark:text-stone-100 shadow-md backdrop-blur-xs">
-                <ZoomIn className="w-4 h-4" />
-              </span>
-            </div>
-          )}
-        </>
-      ) : (
-        /* Graceful Accessible Fallback Container */
-        <div
-          className="absolute inset-0 p-5 bg-gradient-to-br from-[#F5F2EA] to-[#EBE6DC] dark:from-[#1E1C1A] dark:to-[#171514] border border-stone-200/70 dark:border-stone-800 flex flex-col justify-between select-none"
-          role="img"
+      <div className="w-full h-full flex items-center justify-center overflow-hidden bg-stone-100/90 dark:bg-stone-900/90">
+        <img
+          src={currentSrc}
+          alt={accessibleAltText}
           aria-label={accessibleAltText}
+          role="img"
+          loading={priority ? 'eager' : 'lazy'}
+          referrerPolicy="no-referrer"
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          className={`w-full h-full transition-all duration-300 ${
+            fitMode === 'contain' ? 'object-contain p-1.5' : 'object-cover'
+          } ${isMinimized ? 'scale-[0.82] shadow-inner' : 'scale-100'} ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      </div>
+
+      {!isLoaded && (
+        <div
+          className="absolute inset-0 bg-stone-200/60 dark:bg-stone-800/60 animate-pulse flex items-center justify-center"
+          aria-hidden="true"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium tracking-wider text-stone-500 dark:text-stone-400 uppercase">
-              {category || 'Personal Photograph'}
-            </span>
-            <span className="p-1.5 rounded-md bg-stone-200/60 dark:bg-stone-800 text-stone-600 dark:text-stone-400">
-              <Camera className="w-4 h-4" />
-            </span>
-          </div>
+          <Camera className="w-6 h-6 text-stone-400 dark:text-stone-600" />
+        </div>
+      )}
 
-          <div className="my-auto py-2">
-            <p className="text-sm font-semibold text-stone-800 dark:text-stone-200 line-clamp-2">
-              {title || accessibleAltText}
-            </p>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 line-clamp-1 font-mono">
-              {fileName}
-            </p>
-          </div>
+      {/* Visitor Controls: Fit into Frame or Minimize ("that's it") */}
+      {showFitControls && isLoaded && (
+        <div
+          className="absolute top-2.5 right-2.5 flex items-center gap-1.5 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Fit into Frame Button */}
+          <button
+            type="button"
+            onClick={handleToggleFit}
+            title={fitMode === 'contain' ? 'Image fitted into frame (Click to fill)' : 'Fit image into frame'}
+            aria-label={fitMode === 'contain' ? 'Image fitted into frame' : 'Fit image into frame'}
+            className={`px-2 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1 backdrop-blur-md transition-all shadow-xs cursor-pointer ${
+              fitMode === 'contain'
+                ? 'bg-stone-900/90 text-white dark:bg-white/90 dark:text-stone-950 border border-stone-700/50'
+                : 'bg-white/85 text-stone-800 dark:bg-stone-900/85 dark:text-stone-200 hover:bg-white dark:hover:bg-stone-900 border border-stone-200 dark:border-stone-700'
+            }`}
+          >
+            <Maximize2 className="w-3 h-3" />
+            <span className="hidden xs:inline">{fitMode === 'contain' ? 'Fitted' : 'Fit to Frame'}</span>
+          </button>
 
-          <div className="pt-2 border-t border-stone-200/60 dark:border-stone-800 flex items-center justify-between">
-            <span className="text-[10px] text-stone-500 dark:text-stone-400">
-              Taher Chitalwala · Visual Archive
-            </span>
-          </div>
+          {/* Minimize Button */}
+          <button
+            type="button"
+            onClick={handleToggleMinimize}
+            title={isMinimized ? 'Restore image scale' : 'Minimize image in frame'}
+            aria-label={isMinimized ? 'Restore image scale' : 'Minimize image in frame'}
+            className={`px-2 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1 backdrop-blur-md transition-all shadow-xs cursor-pointer ${
+              isMinimized
+                ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-stone-950 border border-amber-600'
+                : 'bg-white/85 text-stone-800 dark:bg-stone-900/85 dark:text-stone-200 hover:bg-white dark:hover:bg-stone-900 border border-stone-200 dark:border-stone-700'
+            }`}
+          >
+            <Minimize2 className="w-3 h-3" />
+            <span className="hidden xs:inline">{isMinimized ? 'Minimized' : 'Minimize'}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Minimized Status Badge */}
+      {isMinimized && (
+        <div className="absolute bottom-2.5 left-2.5 pointer-events-none z-10">
+          <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/90 text-stone-950 shadow-xs uppercase">
+            Minimized View
+          </span>
+        </div>
+      )}
+
+      {/* Hover zoom expansion indicator */}
+      {showZoomIcon && isLoaded && !isMinimized && (
+        <div
+          className="absolute inset-0 bg-stone-950/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none"
+          aria-hidden="true"
+        >
+          <span className="p-2 rounded-full bg-white/95 dark:bg-stone-900/95 text-stone-900 dark:text-stone-100 shadow-md backdrop-blur-xs">
+            <ZoomIn className="w-4 h-4" />
+          </span>
         </div>
       )}
     </div>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+      <defs>
+        <linearGradient id="blazer-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1E293B" />
+          <stop offset="100%" stop-color="#0F172A" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="url(#blazer-bg)" />
+
+      <!-- Formal Conference Hall Backdrop -->
+      <rect x="150" y="120" width="900" height="160" rx="16" fill="#0F172A" stroke="#475569" stroke-width="2" />
+      <text x="600" y="180" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="28" fill="#FAF9F5" text-anchor="middle" letter-spacing="2">CONFERENCE DELEGATION</text>
+      <text x="600" y="220" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#38BDF8" text-anchor="middle">FORMAL CONFERENCE BLAZERS &amp; CREDENTIALS</text>
+
+      <!-- Contingent Lineup in Blazers -->
+      <g transform="translate(600, 520)">
+        <g transform="translate(-240, 0)"><circle cx="0" cy="-60" r="38" fill="#FEF3C7" /><rect x="-40" y="-12" width="80" height="230" rx="14" fill="#0284C7" /><rect x="-10" y="25" width="20" height="28" fill="#FFF" rx="3" /></g>
+        <g transform="translate(-120, 0)"><circle cx="0" cy="-70" r="40" fill="#FEF3C7" /><rect x="-45" y="-20" width="90" height="240" rx="14" fill="#0369A1" /><rect x="-10" y="15" width="20" height="28" fill="#FFF" rx="3" /></g>
+        <!-- Taher in Center -->
+        <g transform="translate(0, 0)"><circle cx="0" cy="-80" r="44" fill="#FEF3C7" stroke="#FDE047" stroke-width="2" /><rect x="-50" y="-28" width="100" height="250" rx="14" fill="#075985" /><rect x="-12" y="10" width="24" height="32" fill="#FDE047" rx="3" /></g>
+        <g transform="translate(120, 0)"><circle cx="0" cy="-70" r="40" fill="#FEF3C7" /><rect x="-45" y="-20" width="90" height="240" rx="14" fill="#0369A1" /><rect x="-10" y="15" width="20" height="28" fill="#FFF" rx="3" /></g>
+        <g transform="translate(240, 0)"><circle cx="0" cy="-60" r="38" fill="#FEF3C7" /><rect x="-40" y="-12" width="80" height="230" rx="14" fill="#0284C7" /><rect x="-10" y="25" width="20" height="28" fill="#FFF" rx="3" /></g>
+      </g>
+
+      <!-- Badge Overlay -->
+      <rect x="80" y="60" width="370" height="58" rx="29" fill="#0F172A" opacity="0.9" stroke="#38BDF8" stroke-width="1.5" />
+      <text x="110" y="96" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="16" fill="#FAF9F5" letter-spacing="1">DELEGATION CONTINGENT</text>
+
+      <!-- Footer Info Strip -->
+      <rect x="60" y="700" width="1080" height="60" rx="14" fill="#0F172A" opacity="0.95" stroke="#334155" stroke-width="1.5" />
+      <text x="90" y="737" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#FAF9F5">Delegation Contingent in Formal Attire</text>
+      <text x="90" y="750" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="12" fill="#94A3B8">Wearing conference blazers, credentials, and delegate badges</text>
+      <text x="1100" y="737" font-family="monospace" font-weight="700" font-size="14" fill="#38BDF8" text-anchor="end">IIMUN DELEGATION</text>
+    </svg>

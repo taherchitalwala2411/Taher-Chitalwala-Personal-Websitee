@@ -5,10 +5,6 @@ import {
   ChevronRight,
   Maximize2,
   Minimize2,
-  ZoomIn,
-  ZoomOut,
-  RotateCcw,
-  Camera,
 } from 'lucide-react';
 import { galleryPhotos } from '../data/portfolioData';
 import { getPhoto, getPhotoUrlCandidates } from '../utils/photoStorage';
@@ -30,9 +26,9 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 }) => {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [candidateIndex, setCandidateIndex] = useState(0);
-  const [hasError, setHasError] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [isContain, setIsContain] = useState<boolean>(true);
+  const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
   const candidates = getPhotoUrlCandidates(fileName);
 
@@ -40,13 +36,12 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   const currentIndex = galleryPhotos.findIndex((p) => p.fileName === fileName);
   const currentPhotoMeta = currentIndex !== -1 ? galleryPhotos[currentIndex] : null;
 
-  // Load from storage or fallback candidate
+  // Load from storage or fallback visual asset
   useEffect(() => {
     let active = true;
     getPhoto(fileName).then((stored) => {
       if (active && stored) {
         setDataUrl(stored);
-        setHasError(false);
       }
     });
 
@@ -73,7 +68,10 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
     if (!dataUrl && candidateIndex < candidates.length - 1) {
       setCandidateIndex((prev) => prev + 1);
     } else {
-      setHasError(true);
+      // Pull guaranteed visual archive asset
+      getPhoto(fileName).then((stored) => {
+        if (stored) setDataUrl(stored);
+      });
     }
   };
 
@@ -82,127 +80,148 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   const accessibleAltText =
     currentPhotoMeta?.altText ||
     title ||
-    `Photograph of Taher Chitalwala: ${fileName}`;
+    `Photograph of Taher Chitalwala: ${fileName} for blind users`;
+
+  // Fitting the image into the frame
+  const handleFitToFrame = () => {
+    setIsContain(true);
+    setZoomLevel(1);
+    setIsMinimized(false);
+  };
+
+  // Minimizing the image
+  const handleMinimize = () => {
+    if (!isMinimized) {
+      setIsMinimized(true);
+      setZoomLevel(0.72);
+    } else {
+      setIsMinimized(false);
+      setZoomLevel(1);
+    }
+  };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-stone-950/90 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-stone-950/90 backdrop-blur-md animate-in fade-in duration-200"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label={title || 'Full photograph modal'}
     >
       <div
-        className="relative max-w-5xl w-full max-h-[92vh] flex flex-col bg-stone-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-800"
+        className={`relative max-w-5xl w-full flex flex-col bg-stone-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-800 transition-all duration-300 ${
+          isMinimized ? 'max-h-[75vh] scale-95' : 'max-h-[92vh] scale-100'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Bar with Clean Viewing Controls */}
-        <div className="p-4 sm:p-5 bg-stone-950 border-b border-stone-800 flex items-center justify-between text-xs text-stone-300">
+        {/* Top Control Bar with Exclusive "Fit into Frame" and "Minimize" visitor options ("that's it") */}
+        <div className="p-3.5 sm:p-4 bg-stone-950 border-b border-stone-800 flex items-center justify-between gap-3 text-xs text-stone-300">
           <div className="flex items-center gap-2 overflow-hidden">
             <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-stone-800 text-stone-300 font-semibold shrink-0">
               {category || currentPhotoMeta?.category || 'Visual Archive'}
             </span>
-            <span className="font-mono text-[11px] text-stone-400 truncate">
+            <span className="font-mono text-[11px] text-stone-400 truncate hidden sm:inline">
               {fileName}
             </span>
           </div>
 
+          {/* Visitor Action Controls */}
           <div className="flex items-center gap-2">
-            {/* View Mode Toggle: Contain vs Cover */}
+            {/* Option 1: Fitting the image into the frame */}
             <button
-              onClick={() => setIsContain(!isContain)}
-              title={isContain ? 'Fill Screen' : 'Fit Entire Photo'}
-              aria-label={isContain ? 'Fill Screen' : 'Fit Entire Photo'}
-              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 transition-colors cursor-pointer"
+              type="button"
+              onClick={handleFitToFrame}
+              title="Fit entire image into frame without cropping"
+              aria-label="Fit entire image into frame without cropping"
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                isContain && !isMinimized
+                  ? 'bg-white text-stone-950 shadow-xs'
+                  : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
+              }`}
             >
-              {isContain ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span>Fit into Frame</span>
             </button>
 
-            {/* Zoom Controls */}
-            <div className="flex items-center gap-1 bg-stone-800 rounded-lg p-0.5">
-              <button
-                onClick={() => setZoomLevel((z) => Math.max(0.6, z - 0.2))}
-                title="Zoom Out"
-                aria-label="Zoom Out"
-                className="p-1 text-stone-300 hover:text-white cursor-pointer"
-              >
-                <ZoomOut className="w-3.5 h-3.5" />
-              </button>
-              <span className="text-[10px] font-mono px-1">
-                {Math.round(zoomLevel * 100)}%
-              </span>
-              <button
-                onClick={() => setZoomLevel((z) => Math.min(2.5, z + 0.2))}
-                title="Zoom In"
-                aria-label="Zoom In"
-                className="p-1 text-stone-300 hover:text-white cursor-pointer"
-              >
-                <ZoomIn className="w-3.5 h-3.5" />
-              </button>
-              {zoomLevel !== 1 && (
-                <button
-                  onClick={() => setZoomLevel(1)}
-                  title="Reset Zoom"
-                  aria-label="Reset Zoom"
-                  className="p-1 text-stone-300 hover:text-white cursor-pointer"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                </button>
-              )}
-            </div>
+            {/* Option 2: Minimizing the image */}
+            <button
+              type="button"
+              onClick={handleMinimize}
+              title={isMinimized ? 'Restore full frame size' : 'Minimize image in frame'}
+              aria-label={isMinimized ? 'Restore full frame size' : 'Minimize image in frame'}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                isMinimized
+                  ? 'bg-amber-500 text-stone-950 shadow-xs'
+                  : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
+              }`}
+            >
+              <Minimize2 className="w-3.5 h-3.5" />
+              <span>{isMinimized ? 'Restore' : 'Minimize'}</span>
+            </button>
 
             {/* Close Button */}
             <button
+              type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 transition-colors cursor-pointer"
-              aria-label="Close photograph view"
+              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-white transition-colors cursor-pointer ml-1"
+              aria-label="Close and return to page"
+              title="Close"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Media Frame with Descriptive Alt Text for Blind Users */}
-        <div className="relative flex-1 min-h-[350px] max-h-[68vh] bg-stone-950 flex items-center justify-center p-4 overflow-auto">
-          {!hasError ? (
-            <div
-              className="transition-transform duration-200 flex items-center justify-center max-h-full max-w-full"
-              style={{ transform: `scale(${zoomLevel})` }}
-            >
-              <img
-                src={currentSrc}
-                alt={accessibleAltText}
-                aria-label={accessibleAltText}
-                role="img"
-                onError={handleImageError}
-                className={`max-h-full max-w-full rounded-lg shadow-lg ${
-                  isContain ? 'object-contain' : 'object-cover'
-                }`}
-              />
-            </div>
-          ) : (
-            <div className="p-8 max-w-md text-center bg-stone-900 rounded-xl border border-stone-800 space-y-3">
-              <Camera className="w-12 h-12 text-stone-500 mx-auto" />
-              <h4 className="text-base font-bold text-stone-200">{title}</h4>
-              <p className="text-xs text-stone-400 font-mono">{fileName}</p>
-              <p className="text-xs text-stone-500">{accessibleAltText}</p>
+        {/* Media Frame showing the Photo */}
+        <div className="relative flex-1 min-h-[320px] max-h-[66vh] bg-stone-950 flex items-center justify-center p-4 overflow-auto">
+          <div
+            className="transition-transform duration-200 flex items-center justify-center max-h-full max-w-full"
+            style={{ transform: `scale(${zoomLevel})` }}
+          >
+            <img
+              src={currentSrc}
+              alt={accessibleAltText}
+              aria-label={accessibleAltText}
+              role="img"
+              onError={handleImageError}
+              className={`max-h-[60vh] max-w-full rounded-lg shadow-2xl transition-all duration-300 ${
+                isContain ? 'object-contain' : 'object-cover'
+              }`}
+            />
+          </div>
+
+          {/* Minimized Watermark Indicator */}
+          {isMinimized && (
+            <div className="absolute top-4 left-4 bg-amber-500/90 text-stone-950 px-2.5 py-1 rounded text-[10px] font-mono font-bold uppercase shadow-sm">
+              Minimized Scale (72%)
             </div>
           )}
         </div>
 
-        {/* Caption Bar with Alt Description Display for Universal Accessibility */}
+        {/* Caption Bar with Alt Description Display for Blind / Accessibility Users */}
         <div className="p-4 sm:p-5 bg-stone-950 border-t border-stone-800">
-          <h3 className="text-base sm:text-lg font-bold text-white">
-            {title}
-          </h3>
-          {currentPhotoMeta?.description && (
-            <p className="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
-              {currentPhotoMeta.description}
-            </p>
-          )}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                {title}
+              </h3>
+              {currentPhotoMeta?.description && (
+                <p className="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+                  {currentPhotoMeta.description}
+                </p>
+              )}
+            </div>
+
+            <div className="shrink-0 flex items-center gap-2">
+              <span className="text-[10px] font-mono px-2 py-1 rounded bg-stone-900 border border-stone-800 text-stone-400">
+                {isContain ? 'Fitted in Frame' : 'Cover'}
+              </span>
+            </div>
+          </div>
+
           {currentPhotoMeta?.altText && (
-            <p className="text-[11px] text-stone-500 mt-1.5 font-sans italic border-l-2 border-stone-700 pl-2">
-              Visual description: {currentPhotoMeta.altText}
+            <p className="text-[11px] text-stone-400 mt-2 font-sans italic border-l-2 border-stone-700 pl-2">
+              Alt text description for blind users: {currentPhotoMeta.altText}
             </p>
           )}
         </div>
@@ -210,27 +229,31 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         {/* Previous / Next Arrows in Gallery sequence */}
         {currentIndex > 0 && (
           <button
+            type="button"
             onClick={() => {
               const prev = galleryPhotos[currentIndex - 1];
               onSelectPhoto(prev.fileName, prev.title, prev.category);
             }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white transition-colors cursor-pointer shadow-lg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-stone-900/85 hover:bg-stone-900 text-white transition-colors cursor-pointer shadow-lg border border-stone-700/60"
             aria-label="Previous photograph"
+            title="Previous photograph"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
         )}
 
         {currentIndex !== -1 && currentIndex < galleryPhotos.length - 1 && (
           <button
+            type="button"
             onClick={() => {
               const next = galleryPhotos[currentIndex + 1];
               onSelectPhoto(next.fileName, next.title, next.category);
             }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white transition-colors cursor-pointer shadow-lg"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-stone-900/85 hover:bg-stone-900 text-white transition-colors cursor-pointer shadow-lg border border-stone-700/60"
             aria-label="Next photograph"
+            title="Next photograph"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         )}
       </div>

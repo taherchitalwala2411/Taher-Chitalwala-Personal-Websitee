@@ -9,6 +9,8 @@ import {
   Play,
   Pause,
   Sparkles,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 import { personalInfo, galleryPhotos, defaultTopPhotos } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
@@ -29,6 +31,8 @@ export const Hero: React.FC<HeroProps> = ({
   const featuredPhotos = defaultTopPhotos;
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [fitMode, setFitMode] = useState<'contain' | 'cover'>('contain');
+  const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
   // Slideshow timer
   useEffect(() => {
@@ -44,7 +48,7 @@ export const Hero: React.FC<HeroProps> = ({
     title: 'Featured Milestone Highlight',
     category: 'Featured Highlight',
     description: '',
-    altText: 'Featured photograph of Taher Chitalwala',
+    altText: 'Featured photograph of Taher Chitalwala for blind users',
   };
 
   const handlePrev = (e: React.MouseEvent) => {
@@ -165,11 +169,11 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
           </div>
 
-          {/* Right Column: EXPANDED TOP SHOWCASE (Only Flag Ceremony, Air Force, NIE TOI, Shelf) */}
+          {/* Right Column: TOP SHOWCASE WITH VISITOR OPTIONS ("that's it") */}
           <div className="lg:col-span-7 w-full">
             <div className="relative w-full bg-white/95 dark:bg-stone-900/95 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-xl overflow-hidden p-4 sm:p-5 backdrop-blur-xs transition-colors">
-              {/* Header Bar of the Showcase (Visitor View: Clean Play/Pause & Nav Arrows) */}
-              <div className="flex items-center justify-between pb-3.5 border-b border-stone-100 dark:border-stone-800 text-xs gap-2">
+              {/* Header Bar with Visitor Options: Fit into Frame or Minimize */}
+              <div className="flex flex-wrap items-center justify-between pb-3.5 border-b border-stone-100 dark:border-stone-800 text-xs gap-3">
                 <div className="flex items-center gap-2">
                   <span className="flex items-center gap-1.5 font-bold text-stone-900 dark:text-stone-100">
                     <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
@@ -180,14 +184,50 @@ export const Hero: React.FC<HeroProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1.5">
+                {/* Exclusive Visitor Controls: Fitting into Frame or Minimizing ("that's it") */}
+                <div className="flex items-center gap-2">
+                  {/* Option 1: Fit into Frame */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFitMode('contain');
+                      setIsMinimized(false);
+                    }}
+                    title="Fit entire image into frame without cropping"
+                    aria-label="Fit image into frame"
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                      fitMode === 'contain' && !isMinimized
+                        ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
+                        : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+                    }`}
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Fit to Frame</span>
+                  </button>
+
+                  {/* Option 2: Minimize */}
+                  <button
+                    type="button"
+                    onClick={() => setIsMinimized(!isMinimized)}
+                    title={isMinimized ? 'Restore full frame size' : 'Minimize image in frame'}
+                    aria-label="Minimize image in frame"
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                      isMinimized
+                        ? 'bg-amber-500 text-stone-950 shadow-xs'
+                        : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+                    }`}
+                  >
+                    <Minimize2 className="w-3.5 h-3.5" />
+                    <span>{isMinimized ? 'Restore' : 'Minimize'}</span>
+                  </button>
+
                   {/* Play / Pause Slideshow */}
                   <button
                     type="button"
                     onClick={() => setIsPlaying(!isPlaying)}
                     title={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
                     aria-label={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
-                    className="p-1.5 rounded-md text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
+                    className="p-1 rounded-md text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
                   >
                     {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                   </button>
@@ -198,7 +238,7 @@ export const Hero: React.FC<HeroProps> = ({
                     onClick={handlePrev}
                     title="Previous photo"
                     aria-label="Previous photo in showcase"
-                    className="p-1.5 rounded-md text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
+                    className="p-1 rounded-md text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
                   >
                     <ChevronLeft className="w-4.5 h-4.5" />
                   </button>
@@ -208,28 +248,40 @@ export const Hero: React.FC<HeroProps> = ({
                     onClick={handleNext}
                     title="Next photo"
                     aria-label="Next photo in showcase"
-                    className="p-1.5 rounded-md text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
+                    className="p-1 rounded-md text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
                   >
                     <ChevronRight className="w-4.5 h-4.5" />
                   </button>
                 </div>
               </div>
 
-              {/* Substantially Larger Photo Frame with Full Accessible Alt Text */}
-              <div className="relative mt-3.5 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700 cursor-pointer shadow-inner">
+              {/* Showcase Photo Frame */}
+              <div
+                className={`relative mt-3.5 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700 cursor-pointer shadow-inner transition-all duration-300 ${
+                  isMinimized ? 'scale-95' : 'scale-100'
+                }`}
+              >
                 <PortfolioImage
                   fileName={currentFileName}
                   alt={
                     currentMeta.altText ||
-                    `${currentMeta.title} - Photograph of Taher Chitalwala`
+                    `${currentMeta.title} - Photograph of Taher Chitalwala for blind users`
                   }
                   title={currentMeta.title}
                   category={currentMeta.category}
                   aspectRatioClass="aspect-[16/10] min-h-[380px] sm:min-h-[460px] md:min-h-[490px] w-full"
                   priority={true}
-                  defaultFit="contain"
+                  defaultFit={fitMode}
+                  showFitControls={false}
                   onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
                 />
+
+                {/* Minimized Indicator Watermark */}
+                {isMinimized && (
+                  <div className="absolute top-3 left-3 bg-amber-500 text-stone-950 text-[10px] font-mono font-bold px-2 py-0.5 rounded shadow-sm uppercase">
+                    Minimized View
+                  </div>
+                )}
 
                 {/* Arrow Overlays on Hover */}
                 {featuredPhotos.length > 1 && (
@@ -319,6 +371,7 @@ export const Hero: React.FC<HeroProps> = ({
                           aspectRatioClass="w-full h-full"
                           showZoomIcon={false}
                           defaultFit="cover"
+                          showFitControls={false}
                         />
                       </button>
                     );

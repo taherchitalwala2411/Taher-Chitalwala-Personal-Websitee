@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+      <defs>
+        <linearGradient id="shelf-wood" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#3D2314" />
+          <stop offset="50%" stop-color="#24140B" />
+          <stop offset="100%" stop-color="#140B06" />
+        </linearGradient>
+        <linearGradient id="trophy-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FFE57F" />
+          <stop offset="50%" stop-color="#FFC107" />
+          <stop offset="100%" stop-color="#FF8F00" />
+        </linearGradient>
+        <linearGradient id="silver-cup" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FFFFFF" />
+          <stop offset="50%" stop-color="#CFD8DC" />
+          <stop offset="100%" stop-color="#90A4AE" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="#1A1512" />
+
+      <!-- Wooden Trophy Showcase Backing -->
+      <rect x="100" y="100" width="1000" height="600" rx="16" fill="url(#shelf-wood)" stroke="#5D4037" stroke-width="4" />
+
+      <!-- Golden Inscription Plaque at Top -->
+      <rect x="250" y="130" width="700" height="70" rx="12" fill="#2E1A0F" stroke="#FFC107" stroke-width="2" />
+      <text x="600" y="174" font-family="'Georgia', serif" font-weight="900" font-size="30" fill="url(#trophy-gold)" text-anchor="middle" letter-spacing="4">“I CAN &amp; I WILL”</text>
+
+      <!-- Shelf Tiers -->
+      <rect x="130" y="380" width="940" height="24" rx="6" fill="#4E342E" stroke="#8D6E63" stroke-width="2" />
+      <rect x="130" y="600" width="940" height="24" rx="6" fill="#4E342E" stroke="#8D6E63" stroke-width="2" />
+
+      <!-- Top Tier: Major Trophies -->
+      <!-- SSC Topper 1st Rank Cup -->
+      <g transform="translate(300, 240)">
+        <path d="M -40 0 L 40 0 L 30 70 Q 0 100 -30 70 Z" fill="url(#trophy-gold)" />
+        <rect x="-15" y="90" width="30" height="40" fill="#FF8F00" />
+        <rect x="-45" y="130" width="90" height="20" rx="4" fill="#2E1A0F" stroke="#FFC107" stroke-width="1.5" />
+        <text x="0" y="144" font-family="monospace" font-size="10" font-weight="bold" fill="#FFC107" text-anchor="middle">SSC 1ST RANK</text>
+      </g>
+
+      <!-- Head Boy Memento Plaque -->
+      <g transform="translate(600, 240)">
+        <polygon points="0,-10 60,60 40,130 -40,130 -60,60" fill="url(#silver-cup)" stroke="#ECEFF1" stroke-width="2" />
+        <rect x="-50" y="130" width="100" height="20" rx="4" fill="#1E293B" stroke="#94A3B8" stroke-width="1.5" />
+        <text x="0" y="144" font-family="monospace" font-size="10" font-weight="bold" fill="#ECEFF1" text-anchor="middle">HEAD BOY #280</text>
+      </g>
+
+      <!-- Shining Star / Bandra Carrom Doubles -->
+      <g transform="translate(900, 240)">
+        <polygon points="0,0 20,40 60,45 30,75 40,120 0,95 -40,120 -30,75 -60,45 -20,40" fill="url(#trophy-gold)" />
+        <rect x="-40" y="130" width="80" height="20" rx="4" fill="#2E1A0F" stroke="#FFC107" stroke-width="1.5" />
+        <text x="0" y="144" font-family="monospace" font-size="10" font-weight="bold" fill="#FFC107" text-anchor="middle">SHINING STAR</text>
+      </g>
+
+      <!-- Bottom Tier: Rows of Medals & Cups (15+ Medals) -->
+      <g transform="translate(200, 470)">
+        <!-- Medal Ribbons & Discs -->
+        <g transform="translate(50, 0)"><polygon points="-12,0 0,60 12,0" fill="#E11D48" /><circle cx="0" cy="70" r="18" fill="url(#trophy-gold)" /></g>
+        <g transform="translate(140, 0)"><polygon points="-12,0 0,60 12,0" fill="#2563EB" /><circle cx="0" cy="70" r="18" fill="url(#silver-cup)" /></g>
+        <g transform="translate(230, 0)"><polygon points="-12,0 0,60 12,0" fill="#059669" /><circle cx="0" cy="70" r="18" fill="url(#trophy-gold)" /></g>
+        <g transform="translate(320, 0)"><polygon points="-12,0 0,60 12,0" fill="#E11D48" /><circle cx="0" cy="70" r="18" fill="url(#trophy-gold)" /></g>
+        <g transform="translate(410, 0)"><polygon points="-12,0 0,60 12,0" fill="#D97706" /><circle cx="0" cy="70" r="18" fill="url(#silver-cup)" /></g>
+        <g transform="translate(500, 0)"><polygon points="-12,0 0,60 12,0" fill="#7C3AED" /><circle cx="0" cy="70" r="18" fill="url(#trophy-gold)" /></g>
+        <g transform="translate(590, 0)"><polygon points="-12,0 0,60 12,0" fill="#2563EB" /><circle cx="0" cy="70" r="18" fill="url(#trophy-gold)" /></g>
+        <g transform="translate(680, 0)"><polygon points="-12,0 0,60 12,0" fill="#E11D48" /><circle cx="0" cy="70" r="18" fill="url(#silver-cup)" /></g>
+        <g transform="translate(760, 0)"><polygon points="-12,0 0,60 12,0" fill="#059669" /><circle cx="0" cy="70" r="18" fill="url(#trophy-gold)" /></g>
+      </g>
+
+      <!-- Badge Overlay -->
+      <rect x="80" y="40" width="370" height="52" rx="26" fill="#140B06" opacity="0.9" stroke="#FFC107" stroke-width="1.5" />
+      <text x="110" y="73" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="15" fill="#FAF9F5" letter-spacing="1">THE MILESTONE SHELF</text>
+
+      <!-- Footer Info Strip -->
+      <rect x="60" y="710" width="1080" height="55" rx="14" fill="#140B06" opacity="0.95" stroke="#5D4037" stroke-width="1.5" />
+      <text x="90" y="744" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="17" fill="#FAF9F5">Academic Topper Cups, Head Boy Memento &amp; 15+ Athletic Medals</text>
+      <text x="1100" y="744" font-family="monospace" font-weight="700" font-size="14" fill="#FFC107" text-anchor="end">DISCIPLINE &amp; MERIT</text>
+    </svg>

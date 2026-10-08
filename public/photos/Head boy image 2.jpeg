@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+      <defs>
+        <linearGradient id="bg-flag" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#141E30" />
+          <stop offset="50%" stop-color="#243B55" />
+          <stop offset="100%" stop-color="#0F2027" />
+        </linearGradient>
+        <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F6D365" />
+          <stop offset="100%" stop-color="#FDA085" />
+        </linearGradient>
+        <linearGradient id="maroon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#8B1E28" />
+          <stop offset="100%" stop-color="#550D15" />
+        </linearGradient>
+        <radialGradient id="stage-glow" cx="50%" cy="40%" r="50%">
+          <stop offset="0%" stop-color="#F6D365" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#141E30" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="1200" height="800" fill="url(#bg-flag)" />
+      <circle cx="600" cy="350" r="420" fill="url(#stage-glow)" />
+
+      <!-- Stage Arch Backdrop -->
+      <path d="M 200 800 L 200 320 Q 600 120 1000 320 L 1000 800 Z" fill="#1A2639" opacity="0.6" />
+      <path d="M 240 800 L 240 350 Q 600 170 960 350 L 960 800 Z" fill="#111B29" opacity="0.8" />
+
+      <!-- School Banner & Flag Pole -->
+      <line x1="600" y1="140" x2="600" y2="580" stroke="#E2C974" stroke-width="8" stroke-linecap="round" />
+      <polygon points="600,160 820,220 600,280" fill="url(#maroon-grad)" stroke="#F6D365" stroke-width="4" />
+      <text x="640" y="225" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="24" fill="#FAF9F5" letter-spacing="3">SAIFI HIGH SCHOOL</text>
+      <circle cx="600" cy="140" r="16" fill="#F6D365" stroke="#FFF" stroke-width="3" />
+
+      <!-- Head Boy & Leaders Silhouette Lineup -->
+      <g opacity="0.95">
+        <!-- Dignitaries / Police Guests & Teachers on Side -->
+        <circle cx="340" cy="450" r="38" fill="#2E4057" />
+        <rect x="300" y="495" width="80" height="220" rx="16" fill="#1D2A3A" />
+        <circle cx="440" cy="430" r="40" fill="#3D5A80" />
+        <rect x="395" y="475" width="90" height="240" rx="18" fill="#293241" />
+
+        <circle cx="760" cy="430" r="40" fill="#3D5A80" />
+        <rect x="715" y="475" width="90" height="240" rx="18" fill="#293241" />
+        <circle cx="860" cy="450" r="38" fill="#2E4057" />
+        <rect x="820" y="495" width="80" height="220" rx="16" fill="#1D2A3A" />
+
+        <!-- Taher Chitalwala (Head Boy) in Uniform Holding Flag -->
+        <circle cx="600" cy="380" r="50" fill="#F4E8D1" stroke="#E2C974" stroke-width="3" />
+        <path d="M 540 440 L 660 440 L 675 730 L 525 730 Z" fill="#FAF9F5" stroke="#E2C974" stroke-width="2" />
+        <!-- Head Boy Sash -->
+        <path d="M 565 440 L 645 610 L 620 618 L 545 448 Z" fill="url(#maroon-grad)" />
+        <!-- Head Boy Badge #280 -->
+        <circle cx="585" cy="495" r="14" fill="#F6D365" stroke="#8B1E28" stroke-width="2" />
+        <text x="585" y="499" font-family="monospace" font-size="9" font-weight="bold" fill="#8B1E28" text-anchor="middle">280</text>
+      </g>
+
+      <!-- Badge Overlay -->
+      <rect x="80" y="60" width="360" height="58" rx="29" fill="#0B131F" opacity="0.85" stroke="#E2C974" stroke-width="1.5" />
+      <circle cx="112" cy="89" r="14" fill="#8B1E28" />
+      <text x="140" y="95" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="16" fill="#FAF9F5" letter-spacing="1">INVESTITURE CEREMONY</text>
+
+      <!-- Footer Info Strip -->
+      <rect x="60" y="700" width="1080" height="60" rx="14" fill="#0A1118" opacity="0.9" stroke="#2B3A4A" stroke-width="1.5" />
+      <text x="90" y="737" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#FAF9F5">Saifi High School Flag Ceremony</text>
+      <text x="90" y="750" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="12" fill="#A0AEC0">Head Boy Investiture with Police Guests & House Captains</text>
+      <text x="1100" y="737" font-family="monospace" font-weight="700" font-size="14" fill="#F6D365" text-anchor="end">TAHER CHITALWALA</text>
+    </svg>

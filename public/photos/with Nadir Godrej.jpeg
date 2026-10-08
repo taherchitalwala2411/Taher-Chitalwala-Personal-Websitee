@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+      <defs>
+        <linearGradient id="gallery-forum" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2E1065" />
+          <stop offset="50%" stop-color="#3B0764" />
+          <stop offset="100%" stop-color="#1E1B4B" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="url(#gallery-forum)" />
+
+      <!-- Art Gallery Lighting & Backing Frames -->
+      <rect x="180" y="160" width="360" height="240" rx="12" fill="#312E81" opacity="0.5" stroke="#C084FC" stroke-width="2" />
+      <rect x="660" y="160" width="360" height="240" rx="12" fill="#312E81" opacity="0.5" stroke="#C084FC" stroke-width="2" />
+
+      <!-- Conversation Silhouette: Industrialist Nadir Godrej & Taher Chitalwala -->
+      <g transform="translate(420, 480)">
+        <!-- Mr. Nadir Godrej -->
+        <circle cx="0" cy="-60" r="46" fill="#F3E8FF" stroke="#C084FC" stroke-width="2" />
+        <rect x="-50" y="-10" width="100" height="240" rx="16" fill="#1E1B4B" />
+        <text x="0" y="80" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#E9D5FF" text-anchor="middle">MR. NADIR GODREJ</text>
+      </g>
+
+      <!-- Warm Conversation Exchange Dialogue Arc -->
+      <path d="M 500 420 Q 600 370 700 420" stroke="#FDE047" stroke-width="3" stroke-dasharray="10 8" fill="none" />
+
+      <g transform="translate(780, 480)">
+        <!-- Taher Chitalwala -->
+        <circle cx="0" cy="-60" r="44" fill="#FEF3C7" stroke="#FDE047" stroke-width="2" />
+        <rect x="-48" y="-12" width="96" height="240" rx="16" fill="#0F172A" />
+        <text x="0" y="80" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#FEF08A" text-anchor="middle">TAHER CHITALWALA</text>
+      </g>
+
+      <!-- Badge Overlay -->
+      <rect x="80" y="60" width="410" height="58" rx="29" fill="#1E1B4B" opacity="0.9" stroke="#C084FC" stroke-width="1.5" />
+      <text x="110" y="96" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="16" fill="#FAF9F5" letter-spacing="1">DIGNITARY DIALOGUE · INDUSTRY</text>
+
+      <!-- Footer Info Strip -->
+      <rect x="60" y="700" width="1080" height="60" rx="14" fill="#1E1B4B" opacity="0.95" stroke="#581C87" stroke-width="1.5" />
+      <text x="90" y="737" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#FAF9F5">In Conversation with Industrialist Nadir Godrej</text>
+      <text x="90" y="750" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="12" fill="#E9D5FF">Chairman of Godrej Industries · Cultural Forum, Mumbai</text>
+      <text x="1100" y="737" font-family="monospace" font-weight="700" font-size="14" fill="#FDE047" text-anchor="end">GODREJ INDUSTRIES</text>
+    </svg>

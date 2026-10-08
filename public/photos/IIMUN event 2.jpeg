@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+      <defs>
+        <linearGradient id="anniv-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#172554" />
+          <stop offset="100%" stop-color="#1E1B4B" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="url(#anniv-bg)" />
+
+      <!-- 15 Years of IIMUN Celebration Backdrop -->
+      <rect x="250" y="140" width="700" height="150" rx="20" fill="#0F172A" stroke="#38BDF8" stroke-width="2" />
+      <text x="600" y="195" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="28" fill="#FDE047" text-anchor="middle" letter-spacing="2">15 YEARS OF I.I.M.U.N.</text>
+      <text x="600" y="235" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" fill="#FAF9F5" text-anchor="middle">INTERNATIONAL LUMINIARY FELICITATION</text>
+      <text x="600" y="265" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="14" fill="#38BDF8" text-anchor="middle">PRESENTATION OF COMMEMORATIVE MEMENTO</text>
+
+      <!-- Felicitation on Stage -->
+      <g transform="translate(600, 480)">
+        <!-- Taher Presenting Memento -->
+        <g transform="translate(-140, 0)">
+          <circle cx="0" cy="-60" r="44" fill="#FEF3C7" stroke="#FDE047" stroke-width="2" />
+          <rect x="-45" y="-10" width="90" height="230" rx="14" fill="#0F172A" />
+          <!-- Extended arms holding memento box -->
+          <line x1="20" y1="30" x2="100" y2="40" stroke="#38BDF8" stroke-width="12" stroke-linecap="round" />
+        </g>
+
+        <!-- Commemorative Memento Trophy Plaque -->
+        <rect x="-40" y="10" width="80" height="60" rx="8" fill="#FDE047" stroke="#CA8A04" stroke-width="3" />
+        <circle cx="0" cy="40" r="14" fill="#1E1B4B" />
+
+        <!-- Distinguished International Guest Receiving -->
+        <g transform="translate(140, 0)">
+          <circle cx="0" cy="-60" r="44" fill="#E2E8F0" stroke="#38BDF8" stroke-width="2" />
+          <rect x="-45" y="-10" width="90" height="230" rx="14" fill="#1E293B" />
+          <!-- Extended arms receiving -->
+          <line x1="-20" y1="30" x2="-80" y2="40" stroke="#E2E8F0" stroke-width="12" stroke-linecap="round" />
+        </g>
+      </g>
+
+      <!-- Badge Overlay -->
+      <rect x="80" y="60" width="370" height="58" rx="29" fill="#0F172A" opacity="0.9" stroke="#38BDF8" stroke-width="1.5" />
+      <text x="110" y="96" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="16" fill="#FAF9F5" letter-spacing="1">15 YEARS OF IIMUN</text>
+
+      <!-- Footer Info Strip -->
+      <rect x="60" y="700" width="1080" height="60" rx="14" fill="#0F172A" opacity="0.95" stroke="#1E40AF" stroke-width="1.5" />
+      <text x="90" y="737" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#FAF9F5">Felicitating International Luminary on Stage</text>
+      <text x="90" y="750" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="12" fill="#93C5FD">Official memento presentation at 15 Years of IIMUN Anniversary</text>
+      <text x="1100" y="737" font-family="monospace" font-weight="700" font-size="14" fill="#FDE047" text-anchor="end">STAGE MEMENTO</text>
+    </svg>

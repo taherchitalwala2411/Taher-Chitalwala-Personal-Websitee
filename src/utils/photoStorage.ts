@@ -1,7 +1,10 @@
-// Client-side IndexedDB photo cache and helper
+// Client-side photo storage, cross-visitor asset fallback, and cache helper
+import { PHOTO_VISUAL_ASSETS } from '../data/photoAssets';
+
 const DB_NAME = 'taher_portfolio_photos';
 const DB_VERSION = 1;
 const STORE_NAME = 'photos';
+const LOCAL_STORAGE_PREFIX = 'taher_uploaded_photo_';
 
 export interface StoredPhoto {
   fileName: string;
@@ -32,6 +35,15 @@ function getDb(): Promise<IDBDatabase> {
 }
 
 export async function savePhoto(fileName: string, dataUrl: string): Promise<void> {
+  // Mirror in localStorage for fast cross-tab availability
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${fileName}`, dataUrl);
+    }
+  } catch {
+    // ignore quota errors
+  }
+
   try {
     const db = await getDb();
     return new Promise((resolve, reject) => {
@@ -39,20 +51,36 @@ export async function savePhoto(fileName: string, dataUrl: string): Promise<void
       const store = transaction.objectStore(STORE_NAME);
       const req = store.put({ fileName, dataUrl, updatedAt: Date.now() });
       req.onsuccess = () => {
-        window.dispatchEvent(new CustomEvent('portfolio-photo-updated', { detail: { fileName } }));
+        window.dispatchEvent(
+          new CustomEvent('portfolio-photo-updated', { detail: { fileName, dataUrl } })
+        );
         resolve();
       };
       req.onerror = () => reject(req.error);
     });
   } catch (err) {
     console.warn('Failed to save photo to IndexedDB', err);
+    window.dispatchEvent(
+      new CustomEvent('portfolio-photo-updated', { detail: { fileName, dataUrl } })
+    );
   }
 }
 
 export async function getPhoto(fileName: string): Promise<string | null> {
+  // 1. Check localStorage first for instant synchronous cache
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const local = window.localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${fileName}`);
+      if (local) return local;
+    }
+  } catch {
+    // ignore
+  }
+
+  // 2. Check IndexedDB
   try {
     const db = await getDb();
-    return new Promise((resolve) => {
+    const stored = await new Promise<string | null>((resolve) => {
       const transaction = db.transaction(STORE_NAME, 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       const req = store.get(fileName);
@@ -61,33 +89,61 @@ export async function getPhoto(fileName: string): Promise<string | null> {
       };
       req.onerror = () => resolve(null);
     });
+    if (stored) return stored;
   } catch {
-    return null;
+    // ignore
   }
+
+  // 3. Fallback to guaranteed visual archive asset so all visitors see every milestone photograph
+  if (PHOTO_VISUAL_ASSETS[fileName]) {
+    return PHOTO_VISUAL_ASSETS[fileName];
+  }
+
+  return null;
 }
 
 export async function getAllStoredPhotos(): Promise<Record<string, string>> {
+  const result: Record<string, string> = { ...PHOTO_VISUAL_ASSETS };
+
+  // Pull from localStorage
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const key = window.localStorage.key(i);
+        if (key && key.startsWith(LOCAL_STORAGE_PREFIX)) {
+          const fileName = key.replace(LOCAL_STORAGE_PREFIX, '');
+          const val = window.localStorage.getItem(key);
+          if (val) result[fileName] = val;
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  // Pull from IndexedDB
   try {
     const db = await getDb();
-    return new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
       const transaction = db.transaction(STORE_NAME, 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       const req = store.getAll();
       req.onsuccess = () => {
-        const result: Record<string, string> = {};
         for (const item of req.result || []) {
           result[item.fileName] = item.dataUrl;
         }
-        resolve(result);
+        resolve();
       };
-      req.onerror = () => resolve({});
+      req.onerror = () => resolve();
     });
   } catch {
-    return {};
+    // ignore
   }
+
+  return result;
 }
 
-// Generate possible local paths for an image filename
+// Generate candidate paths to check for the image file
 export function getPhotoUrlCandidates(fileName: string): string[] {
   const encoded = encodeURIComponent(fileName);
   return [
@@ -95,6 +151,9 @@ export function getPhotoUrlCandidates(fileName: string): string[] {
     `/photos/${encoded}`,
     `/${fileName}`,
     `/${encoded}`,
+    `/images/${fileName}`,
+    `/assets/${fileName}`,
     `./photos/${fileName}`,
+    `./${fileName}`,
   ];
 }
