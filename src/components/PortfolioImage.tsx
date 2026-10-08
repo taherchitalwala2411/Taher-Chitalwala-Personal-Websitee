@@ -34,53 +34,13 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [fitMode, setFitMode] = useState<'contain' | 'cover'>(defaultFit);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-
   const candidates = getPhotoUrlCandidates(fileName);
-
-  // Load photo: checks IndexedDB, localStorage, or rich visual asset fallback
-  useEffect(() => {
-    let mounted = true;
-    getPhoto(fileName).then((stored) => {
-      if (mounted && stored) {
-        setDataUrl(stored);
-        setIsLoaded(true);
-      }
-    });
-
-    const handleUpdate = (e: Event) => {
-      const custom = e as CustomEvent<{ fileName: string; dataUrl?: string }>;
-      if (custom.detail?.fileName === fileName) {
-        getPhoto(fileName).then((stored) => {
-          if (mounted && stored) {
-            setDataUrl(stored);
-            setIsLoaded(true);
-          }
-        });
-      }
-    };
-
-    window.addEventListener('portfolio-photo-updated', handleUpdate);
-    return () => {
-      mounted = false;
-      window.removeEventListener('portfolio-photo-updated', handleUpdate);
-    };
-  }, [fileName]);
-
-  const currentSrc = dataUrl || candidates[candidateIndex];
-
+  const currentSrc = candidates[candidateIndex];
   const handleImageError = () => {
-    if (!dataUrl && candidateIndex < candidates.length - 1) {
-      setCandidateIndex((prev) => prev + 1);
-    } else {
-      // If candidates fail, pull the guaranteed visual asset
-      getPhoto(fileName).then((stored) => {
-        if (stored) {
-          setDataUrl(stored);
-          setIsLoaded(true);
-        }
-      });
-    }
-  };
+  if (candidateIndex < candidates.length - 1) {
+    setCandidateIndex((prev) => prev + 1);
+  }
+};
 
   const handleImageLoad = () => {
     setIsLoaded(true);
