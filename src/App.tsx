@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Camera, Sparkles } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -18,7 +18,6 @@ import { GallerySection } from './components/GallerySection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { LightboxModal } from './components/LightboxModal';
-import { PhotoManagerModal } from './components/PhotoManagerModal';
 
 type ViewMode =
   | 'home'
@@ -36,7 +35,6 @@ function PortfolioApp() {
     title: string;
     category?: string;
   } | null>(null);
-  const [isPhotoManagerOpen, setIsPhotoManagerOpen] = useState(false);
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -79,7 +77,7 @@ function PortfolioApp() {
         {currentView === 'home' ? (
           /* LONG SCROLLING LANDING HOME EXPERIENCE */
           <>
-            {/* 1. Hero */}
+            {/* 1. Hero: Only Flag Ceremony, Air Force, NIE TOI, Shelf */}
             <Hero
               onExplore={() => {
                 const aboutEl = document.getElementById('about');
@@ -89,7 +87,7 @@ function PortfolioApp() {
               onOpenPhoto={handleOpenPhoto}
             />
 
-            {/* 2. About Me Preview (portrait removed per request) */}
+            {/* 2. About Me Preview */}
             <AboutSection
               isFullView={false}
               onReadMore={() => setCurrentView('about')}
@@ -102,7 +100,7 @@ function PortfolioApp() {
             {/* 4. Skills & Capabilities */}
             <SkillsSection />
 
-            {/* 5. Achievements Preview */}
+            {/* 5. Achievements Preview (includes Head Boy Flag Ceremony photo) */}
             <AchievementsSection
               isFullView={false}
               onViewAll={() => setCurrentView('achievements')}
@@ -179,18 +177,6 @@ function PortfolioApp() {
         )}
       </main>
 
-      {/* Floating Photo Helper Button */}
-      <div className="fixed bottom-5 right-5 z-30">
-        <button
-          onClick={() => setIsPhotoManagerOpen(true)}
-          className="p-3 rounded-full bg-stone-900 dark:bg-stone-100 text-stone-200 dark:text-stone-900 hover:text-white dark:hover:text-black hover:bg-stone-800 dark:hover:bg-white shadow-lg border border-stone-700 dark:border-stone-300 transition-all flex items-center gap-2 text-xs font-semibold cursor-pointer group"
-          title="Manage & attach portfolio photographs"
-        >
-          <Camera className="w-4 h-4 text-[#E11D48]" />
-          <span className="hidden sm:inline group-hover:inline">Manage Photos</span>
-        </button>
-      </div>
-
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
 
@@ -206,12 +192,6 @@ function PortfolioApp() {
           }
         />
       )}
-
-      {/* Photo Manager Modal */}
-      <PhotoManagerModal
-        isOpen={isPhotoManagerOpen}
-        onClose={() => setIsPhotoManagerOpen(false)}
-      />
     </div>
   );
 }

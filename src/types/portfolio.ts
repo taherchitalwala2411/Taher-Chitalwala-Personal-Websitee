@@ -76,6 +76,7 @@ export interface GalleryPhoto {
   title: string;
   category: 'Speaking & Leadership' | 'IIMUN Events' | 'Awards & Recognition' | 'Dignitaries & Interactions' | 'Sports & Passion' | 'Personal & Moments';
   description: string;
+  altText?: string;
   date?: string;
   featured?: boolean;
 }

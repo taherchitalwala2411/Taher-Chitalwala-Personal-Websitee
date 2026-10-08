@@ -27,18 +27,15 @@ export const personalInfo = {
       'https://www.linkedin.com/in/taher-chitalwala-513107305?utm_source=share_via&utm_content=profile&utm_medium=member_android',
     linkedinLabel: 'linkedin.com/in/taher-chitalwala-513107305',
   },
-  heroPhoto: 'IIMUN event 2.jpeg',
+  heroPhoto: 'Head boy image 2.jpeg',
   trophiesPhoto: 'Trophies.jpeg',
 };
 
 export const defaultTopPhotos = [
   'Head boy image 2.jpeg',
-  'IIMUN event 2.jpeg',
-  'Trophies.jpeg',
+  'IIMUN event 6.jpeg',
   'NIE TOI 2.jpeg',
-  'with Nadir Godrej.jpeg',
-  'SBFL winning.jpeg',
-  'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
+  'Trophies.jpeg',
 ];
 
 export const aboutMeNarrative = [
@@ -401,6 +398,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Speaking & Leadership',
     description:
       'Holding the school flag proudly alongside fellow house captains, teachers, and police guests during the official investiture ceremony.',
+    altText:
+      'Taher Chitalwala dressed in uniform holding the Saifi High School flag proudly during the official investiture ceremony alongside student captains, teachers, and police guests.',
     featured: true,
   },
   {
@@ -410,7 +409,9 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Speaking & Leadership',
     description:
       'Addressing the school during athletic events with microphone in hand, representing Saifi High School as Head Boy (#280).',
-    featured: true,
+    altText:
+      'Taher Chitalwala speaking into a microphone on the athletic field during sports day, wearing Saifi High School Head Boy badge number 280.',
+    featured: false,
   },
   {
     id: 'photo-nie-toi-stage',
@@ -419,6 +420,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Awards & Recognition',
     description:
       'Being conferred the Times of India Student of the Year Award on stage during the official Vidyalankar presentation.',
+    altText:
+      'Taher Chitalwala on stage receiving the Times of India NIE Student of the Year Award trophy from dignitaries during the Vidyalankar felicitation ceremony.',
     featured: true,
   },
   {
@@ -428,6 +431,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Awards & Recognition',
     description:
       'Trophy rack showcasing years of discipline: Head Boy memento, SSC Topper 1st Rank, Shining Star, Bandra Carrom Doubles, Kho-Kho Best Player, and multiple Olympiad medals.',
+    altText:
+      'Trophy shelf inscribed with the motto I Can and I Will, displaying dozens of athletic medals, academic cups, Saifi High School Head Boy memento, and 1st Rank SSC Topper trophy.',
     featured: true,
   },
   {
@@ -437,7 +442,9 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Sports & Passion',
     description:
       'Standing with teammates holding the SBFL Runners-Up trophy board after a gritty football league campaign.',
-    featured: true,
+    altText:
+      'Taher Chitalwala and football teammates smiling together on the field holding the official Saifee Burhani Football League SBFL Season 4 Runners-Up board and medals.',
+    featured: false,
   },
   {
     id: 'photo-iimun-bathinda',
@@ -446,6 +453,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'IIMUN Events',
     description:
       'Traveling across India for IIMUN conferences: holding the official IIMUN Bathinda banner at the railway platform.',
+    altText:
+      'Taher Chitalwala standing on a railway station platform holding the official IIMUN Bathinda 2026 conference banner during outreach travels across India.',
   },
   {
     id: 'photo-nadir-godrej',
@@ -454,7 +463,9 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Dignitaries & Interactions',
     description:
       'Engaging in an insightful, warm personal conversation with Mr. Nadir Godrej at an arts and cultural forum.',
-    featured: true,
+    altText:
+      'Taher Chitalwala in a warm personal conversation with industrialist Nadir Godrej, Chairman of Godrej Industries, at a cultural forum in Mumbai.',
+    featured: false,
   },
   {
     id: 'photo-zayed-khan',
@@ -463,6 +474,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Dignitaries & Interactions',
     description:
       'Group interaction with actor Zayed Khan during a gallery reception in Mumbai.',
+    altText:
+      'Taher Chitalwala posing in a group photograph with Bollywood actor Zayed Khan during a reception event in Mumbai.',
   },
   {
     id: 'photo-iimun-team-arch',
@@ -471,6 +484,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'IIMUN Events',
     description:
       'Celebrating successful conference outcomes with fellow youth volunteers, organizers, and committee delegates.',
+    altText:
+      'Taher Chitalwala standing together with fellow IIMUN youth organizers, volunteers, and delegates beneath a grand decorative entrance arch.',
   },
   {
     id: 'photo-iimun-memento',
@@ -479,7 +494,9 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'IIMUN Events',
     description:
       'Felicitating a distinguished international luminary on stage during the grand 15 Years of IIMUN celebration.',
-    featured: true,
+    altText:
+      'Taher Chitalwala presenting a ceremonial memento on stage to felicitate a distinguished international guest during the 15 Years of IIMUN celebration.',
+    featured: false,
   },
   {
     id: 'photo-iimun-blazers',
@@ -488,6 +505,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'IIMUN Events',
     description:
       'Standing with fellow delegates and resource team members in formal conference attire.',
+    altText:
+      'Taher Chitalwala posing with the IIMUN student delegation contingent, all wearing formal conference blazers and participant badges.',
   },
   {
     id: 'photo-radhika-merchant',
@@ -496,6 +515,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'Dignitaries & Interactions',
     description:
       'Auditorium plenary interaction highlighting youth initiatives, with Radhika Merchant Ambani seated among young delegates.',
+    altText:
+      'Taher Chitalwala in an auditorium plenary gathering where Radhika Merchant Ambani is seated among youth delegates during an IIMUN session.',
   },
   {
     id: 'photo-indian-army',
@@ -504,6 +525,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'IIMUN Events',
     description:
       'Historic interaction with Indian Army personnel of the 31 Infantry Brigade, experiencing national discipline and valor firsthand.',
+    altText:
+      'Taher Chitalwala and youth delegates during an educational interaction with Indian Army officers and personnel of the 31 Infantry Brigade.',
   },
   {
     id: 'photo-iaf-helicopter',
@@ -512,5 +535,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'IIMUN Events',
     description:
       'Delegation visit with IIMUN to the Indian Air Force Base of Jamnagar.',
+    altText:
+      'Taher Chitalwala and student delegates standing in front of an Indian Air Force helicopter during an educational visit to the IAF Station in Jamnagar.',
+    featured: true,
   },
 ];
