@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
@@ -19,6 +19,10 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { LightboxModal } from './components/LightboxModal';
 import { AscendingGraphLoader } from './components/AscendingGraphLoader';
+import { TopProgressBar } from './components/TopProgressBar';
+import { ToastContainer } from './components/ToastNotification';
+import { NotificationProvider } from './context/NotificationContext';
+import { getPhotoUrlCandidates } from './utils/photoStorage';
 
 type ViewMode =
   | 'home'
@@ -29,14 +33,57 @@ type ViewMode =
   | 'gallery'
   | 'contact';
 
+// Map each view to its primary image assets so we can track real-time loading progress
+const viewAssetsMap: Record<ViewMode, string[]> = {
+  home: [
+    'Head boy image 2.jpeg',
+    'IIMUN event 6.jpeg',
+    'NIE TOI 2.jpeg',
+    'Trophies.jpeg',
+    'Headboy image.jpeg',
+  ],
+  about: [
+    'Headboy image.jpeg',
+    'Head boy image 2.jpeg',
+  ],
+  achievements: [
+    'Head boy image 2.jpeg',
+    'NIE TOI 2.jpeg',
+    'SBFL winning.jpeg',
+    'Trophies.jpeg',
+  ],
+  experience: [],
+  projects: [],
+  gallery: [
+    'Head boy image 2.jpeg',
+    'Headboy image.jpeg',
+    'IIMUN EVENT 1.jpeg',
+    'IIMUN event 2.jpeg',
+    'IIMUN event 3.jpeg',
+    'IIMUN event 4.jpeg',
+    'IIMun event 5.jpeg',
+    'IIMUN event 6.jpeg',
+    'NIE TOI 2.jpeg',
+    'SBFL winning.jpeg',
+    'Trophies.jpeg',
+    'With Zayed Khan.jpeg',
+    'with Nadir Godrej.jpeg',
+    'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
+  ],
+  contact: [],
+};
+
 function PortfolioApp() {
   const [currentView, setCurrentView] = useState<ViewMode>('home');
-  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
+  const [isNavigating, setIsNavigating] = useState<boolean>(false);
+  const [loadProgress, setLoadProgress] = useState<number>(0);
   const [lightboxPhoto, setLightboxPhoto] = useState<{
     fileName: string;
     title: string;
     category?: string;
   } | null>(null);
+
+  const navigationSessionRef = useRef<number>(0);
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -53,16 +100,109 @@ function PortfolioApp() {
       return;
     }
 
-    // Trigger Ascending Bar Graph loading animation whenever switching between pages
-    setIsPageLoading(true);
+    // Increment session ID to cancel or ignore stale navigations
+    navigationSessionRef.current += 1;
+    const currentSession = navigationSessionRef.current;
 
-    setTimeout(() => {
-      setCurrentView(targetView);
-      window.scrollTo({ top: 0, behavior: 'instant' });
+    // Trigger real-time navigation loader
+    setIsNavigating(true);
+    setLoadProgress(15);
+
+    const targetAssets = viewAssetsMap[targetView] || [];
+    const startTime = performance.now();
+
+    // Fast load path for views without heavy images
+    if (targetAssets.length === 0) {
       setTimeout(() => {
-        setIsPageLoading(false);
-      }, 350);
-    }, 550);
+        if (navigationSessionRef.current !== currentSession) return;
+        setLoadProgress(65);
+      }, 50);
+
+      setTimeout(() => {
+        if (navigationSessionRef.current !== currentSession) return;
+        setLoadProgress(100);
+        setCurrentView(targetView);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }, 140);
+
+      setTimeout(() => {
+        if (navigationSessionRef.current !== currentSession) return;
+        setIsNavigating(false);
+        setTimeout(() => {
+          if (navigationSessionRef.current === currentSession) {
+            setLoadProgress(0);
+          }
+        }, 300);
+      }, 260);
+
+      return;
+    }
+
+    // Dynamic real-time asset loading
+    let loadedCount = 0;
+    const totalCount = targetAssets.length;
+    let completed = false;
+
+    const finalize = () => {
+      if (completed || navigationSessionRef.current !== currentSession) return;
+      completed = true;
+
+      // Small perceptible minimum (~120ms) so transitions remain smooth
+      const elapsed = performance.now() - startTime;
+      const remainingWait = Math.max(0, 120 - elapsed);
+
+      setTimeout(() => {
+        if (navigationSessionRef.current !== currentSession) return;
+        setLoadProgress(100);
+        setCurrentView(targetView);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+        setTimeout(() => {
+          if (navigationSessionRef.current !== currentSession) return;
+          setIsNavigating(false);
+          setTimeout(() => {
+            if (navigationSessionRef.current === currentSession) {
+              setLoadProgress(0);
+            }
+          }, 300);
+        }, 160);
+      }, remainingWait);
+    };
+
+    // Safety maximum timeout (never hang longer than 1600ms)
+    const safetyTimer = setTimeout(() => {
+      finalize();
+    }, 1600);
+
+    // Track each asset in real time
+    targetAssets.forEach((fileName) => {
+      const candidates = getPhotoUrlCandidates(fileName);
+      const primaryUrl = candidates[0] || `/photos/${encodeURIComponent(fileName)}`;
+
+      const img = new Image();
+      img.src = primaryUrl;
+
+      const onItemLoaded = () => {
+        if (completed || navigationSessionRef.current !== currentSession) return;
+        loadedCount += 1;
+        const fraction = loadedCount / totalCount;
+        const currentPercent = Math.min(95, Math.round(15 + fraction * 80));
+        setLoadProgress((prev) => Math.max(prev, currentPercent));
+
+        if (loadedCount >= totalCount) {
+          clearTimeout(safetyTimer);
+          finalize();
+        }
+      };
+
+      if (img.complete) {
+        // Already loaded or in browser cache
+        onItemLoaded();
+      } else {
+        img.onload = onItemLoaded;
+        img.onerror = onItemLoaded;
+      }
+    });
   };
 
   const handleOpenPhoto = (fileName: string, title: string, category?: string) => {
@@ -71,6 +211,12 @@ function PortfolioApp() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF9F5] dark:bg-[#121110] text-stone-900 dark:text-stone-100 transition-colors duration-300 selection:bg-[#8B1E28]/15 selection:text-[#8B1E28] dark:selection:bg-[#E11D48]/25 dark:selection:text-[#E11D48]">
+      {/* Subtle linear progress bar at the very top of the screen */}
+      <TopProgressBar
+        isVisible={isNavigating}
+        progress={loadProgress}
+      />
+
       {/* Navigation with Theme Switcher */}
       <Navbar
         activeSection={currentView}
@@ -199,8 +345,14 @@ function PortfolioApp() {
         />
       )}
 
+      {/* Notification Toast Messages System */}
+      <ToastContainer />
+
       {/* Ascending Graph Loading Animation when switching pages */}
-      <AscendingGraphLoader isVisible={isPageLoading} />
+      <AscendingGraphLoader
+        isVisible={isNavigating}
+        progress={loadProgress}
+      />
     </div>
   );
 }
@@ -208,7 +360,9 @@ function PortfolioApp() {
 export default function App() {
   return (
     <ThemeProvider>
-      <PortfolioApp />
+      <NotificationProvider>
+        <PortfolioApp />
+      </NotificationProvider>
     </ThemeProvider>
   );
 }

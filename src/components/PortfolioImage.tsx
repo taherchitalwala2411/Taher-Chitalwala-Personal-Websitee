@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Camera, ZoomIn, Maximize2, Minimize2 } from 'lucide-react';
-import { getPhoto, getPhotoUrlCandidates } from '../utils/photoStorage';
+import React, { useState } from 'react';
+import { Camera, Square, Scan } from 'lucide-react';
+import { getPhotoUrlCandidates } from '../utils/photoStorage';
 
 interface PortfolioImageProps {
   fileName: string;
@@ -10,7 +10,6 @@ interface PortfolioImageProps {
   title?: string;
   category?: string;
   onClick?: () => void;
-  showZoomIcon?: boolean;
   priority?: boolean;
   defaultFit?: 'cover' | 'contain';
   showFitControls?: boolean;
@@ -22,25 +21,23 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
   className = '',
   aspectRatioClass = 'aspect-[4/3]',
   title,
-  category,
+  category: _category,
   onClick,
-  showZoomIcon = true,
   priority = false,
   defaultFit = 'contain',
   showFitControls = true,
 }) => {
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [fitMode, setFitMode] = useState<'contain' | 'cover'>(defaultFit);
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const candidates = getPhotoUrlCandidates(fileName);
   const currentSrc = candidates[candidateIndex];
+
   const handleImageError = () => {
-  if (candidateIndex < candidates.length - 1) {
-    setCandidateIndex((prev) => prev + 1);
-  }
-};
+    if (candidateIndex < candidates.length - 1) {
+      setCandidateIndex((prev) => prev + 1);
+    }
+  };
 
   const handleImageLoad = () => {
     setIsLoaded(true);
@@ -49,19 +46,6 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
   const accessibleAltText =
     alt || title || `Photograph of Taher Chitalwala: ${fileName} for blind users`;
 
-  // Toggle fitting the image into the frame
-  const handleToggleFit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setFitMode((prev) => (prev === 'contain' ? 'cover' : 'contain'));
-    if (isMinimized) setIsMinimized(false);
-  };
-
-  // Toggle minimizing the image
-  const handleToggleMinimize = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsMinimized((prev) => !prev);
-  };
-
   return (
     <div
       onClick={onClick}
@@ -69,7 +53,7 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
       role="region"
       aria-label={title || accessibleAltText}
     >
-      <div className="w-full h-full flex items-center justify-center overflow-hidden bg-stone-100/90 dark:bg-stone-900/90">
+      <div className="w-full h-full flex items-center justify-center overflow-hidden bg-stone-100/95 dark:bg-stone-900/95">
         <img
           src={currentSrc}
           alt={accessibleAltText}
@@ -80,8 +64,10 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
           onError={handleImageError}
           onLoad={handleImageLoad}
           className={`w-full h-full transition-all duration-300 ${
-            fitMode === 'contain' ? 'object-contain p-1.5' : 'object-cover'
-          } ${isMinimized ? 'scale-[0.82] shadow-inner' : 'scale-100'} ${
+            fitMode === 'contain'
+              ? 'object-contain p-2 sm:p-2.5'
+              : 'object-cover p-0'
+          } ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
         />
@@ -96,63 +82,57 @@ export const PortfolioImage: React.FC<PortfolioImageProps> = ({
         </div>
       )}
 
-      {/* Visitor Controls: Fit into Frame or Minimize ("that's it") */}
+      {/* Frame Controls: Small Frame vs Full Frame */}
       {showFitControls && isLoaded && (
         <div
-          className="absolute top-2.5 right-2.5 flex items-center gap-1.5 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+          className="absolute top-2.5 right-2.5 flex items-center p-0.5 rounded-lg bg-stone-950/80 backdrop-blur-md border border-stone-700/60 shadow-md z-10 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Fit into Frame Button */}
+          {/* Small Frame button */}
           <button
             type="button"
-            onClick={handleToggleFit}
-            title={fitMode === 'contain' ? 'Image fitted into frame (Click to fill)' : 'Fit image into frame'}
-            aria-label={fitMode === 'contain' ? 'Image fitted into frame' : 'Fit image into frame'}
-            className={`px-2 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1 backdrop-blur-md transition-all shadow-xs cursor-pointer ${
+            onClick={(e) => {
+              e.stopPropagation();
+              setFitMode('contain');
+            }}
+            title="Small Frame: Full image visible, frame slightly empty"
+            aria-label="Small Frame (full image visible, frame slightly empty)"
+            className={`px-2 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1 transition-all cursor-pointer ${
               fitMode === 'contain'
-                ? 'bg-stone-900/90 text-white dark:bg-white/90 dark:text-stone-950 border border-stone-700/50'
-                : 'bg-white/85 text-stone-800 dark:bg-stone-900/85 dark:text-stone-200 hover:bg-white dark:hover:bg-stone-900 border border-stone-200 dark:border-stone-700'
+                ? 'bg-white text-stone-950 shadow-xs font-bold'
+                : 'text-stone-300 hover:text-white'
             }`}
           >
-            <Maximize2 className="w-3 h-3" />
-            <span className="hidden xs:inline">{fitMode === 'contain' ? 'Fitted' : 'Fit to Frame'}</span>
+            <Square className="w-2.5 h-2.5" />
+            <span className="hidden xs:inline">Small Frame</span>
           </button>
 
-          {/* Minimize Button */}
+          {/* Full Frame button */}
           <button
             type="button"
-            onClick={handleToggleMinimize}
-            title={isMinimized ? 'Restore image scale' : 'Minimize image in frame'}
-            aria-label={isMinimized ? 'Restore image scale' : 'Minimize image in frame'}
-            className={`px-2 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1 backdrop-blur-md transition-all shadow-xs cursor-pointer ${
-              isMinimized
-                ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-stone-950 border border-amber-600'
-                : 'bg-white/85 text-stone-800 dark:bg-stone-900/85 dark:text-stone-200 hover:bg-white dark:hover:bg-stone-900 border border-stone-200 dark:border-stone-700'
+            onClick={(e) => {
+              e.stopPropagation();
+              setFitMode('cover');
+            }}
+            title="Full Frame: Image fits whole frame, cropped if too large"
+            aria-label="Full Frame (image fits whole frame, cropped if too large)"
+            className={`px-2 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+              fitMode === 'cover'
+                ? 'bg-white text-stone-950 shadow-xs font-bold'
+                : 'text-stone-300 hover:text-white'
             }`}
           >
-            <Minimize2 className="w-3 h-3" />
-            <span className="hidden xs:inline">{isMinimized ? 'Minimized' : 'Minimize'}</span>
+            <Scan className="w-2.5 h-2.5" />
+            <span className="hidden xs:inline">Full Frame</span>
           </button>
         </div>
       )}
 
-      {/* Minimized Status Badge */}
-      {isMinimized && (
-        <div className="absolute bottom-2.5 left-2.5 pointer-events-none z-10">
-          <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/90 text-stone-950 shadow-xs uppercase">
-            Minimized View
-          </span>
-        </div>
-      )}
-
-      {/* Hover zoom expansion indicator */}
-      {showZoomIcon && isLoaded && !isMinimized && (
-        <div
-          className="absolute inset-0 bg-stone-950/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none"
-          aria-hidden="true"
-        >
-          <span className="p-2 rounded-full bg-white/95 dark:bg-stone-900/95 text-stone-900 dark:text-stone-100 shadow-md backdrop-blur-xs">
-            <ZoomIn className="w-4 h-4" />
+      {/* Mode Indicator Badge when in Small Frame */}
+      {fitMode === 'contain' && isLoaded && (
+        <div className="absolute bottom-2 left-2 pointer-events-none z-10 opacity-75 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-stone-950/70 text-stone-300 backdrop-blur-xs">
+            Small Frame
           </span>
         </div>
       )}

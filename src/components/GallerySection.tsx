@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   ArrowRight,
-  ZoomIn,
+  Eye,
 } from 'lucide-react';
 import { galleryPhotos } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
@@ -150,11 +150,11 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                       onClick={() =>
                         onOpenPhoto(photo.fileName, photo.title, photo.category)
                       }
-                      className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
-                      aria-label={`Expand ${photo.title} full photograph`}
+                      className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+                      aria-label={`View ${photo.title} details`}
                     >
-                      <span>Expand</span>
-                      <ZoomIn className="w-3.5 h-3.5" />
+                      <span>View Photo</span>
+                      <Eye className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

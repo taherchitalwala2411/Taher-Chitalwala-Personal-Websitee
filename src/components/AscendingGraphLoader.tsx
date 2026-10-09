@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 interface AscendingGraphLoaderProps {
   isVisible: boolean;
+  progress?: number; // 0 to 100 real-time progress
 }
 
 export const AscendingGraphLoader: React.FC<AscendingGraphLoaderProps> = ({
   isVisible,
+  progress,
 }) => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -18,31 +20,44 @@ export const AscendingGraphLoader: React.FC<AscendingGraphLoaderProps> = ({
       return;
     }
 
-    setActiveStep(1);
-    const intervals: NodeJS.Timeout[] = [];
+    if (progress !== undefined) {
+      // Real-time synchronization: map progress (0-100) to 1..5 active bars
+      // Bar 1 >= 10%, Bar 2 >= 30%, Bar 3 >= 50%, Bar 4 >= 75%, Bar 5 >= 95%
+      let step = 0;
+      if (progress >= 10) step = 1;
+      if (progress >= 30) step = 2;
+      if (progress >= 50) step = 3;
+      if (progress >= 75) step = 4;
+      if (progress >= 95) step = 5;
+      setActiveStep((prev) => Math.max(prev, step));
+    } else {
+      // Fallback sequential ticks if progress is not explicitly passed
+      setActiveStep(1);
+      const intervals: NodeJS.Timeout[] = [];
 
-    barHeights.forEach((_, index) => {
-      const timer = setTimeout(() => {
-        setActiveStep(index + 1);
-      }, (index + 1) * 80);
-      intervals.push(timer);
-    });
+      barHeights.forEach((_, index) => {
+        const timer = setTimeout(() => {
+          setActiveStep(index + 1);
+        }, (index + 1) * 80);
+        intervals.push(timer);
+      });
 
-    return () => {
-      intervals.forEach(clearTimeout);
-    };
-  }, [isVisible]);
+      return () => {
+        intervals.forEach(clearTimeout);
+      };
+    }
+  }, [isVisible, progress]);
 
   if (!isVisible) return null;
 
   return (
     <aside
-      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/40 dark:bg-black/50 backdrop-blur-xs animate-in fade-in duration-150 pointer-events-none"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/30 dark:bg-black/40 backdrop-blur-[2px] transition-opacity duration-200 pointer-events-none"
       role="status"
       aria-label="Loading"
     >
       {/* Very small minimalist container with zero text */}
-      <div className="flex items-center justify-center p-3.5 sm:p-4 rounded-2xl bg-stone-900/90 dark:bg-stone-950/95 border border-stone-800 shadow-xl backdrop-blur-md animate-in zoom-in-95 duration-150">
+      <div className="flex items-center justify-center p-3.5 sm:p-4 rounded-2xl bg-stone-900/90 dark:bg-stone-950/95 border border-stone-800 shadow-xl backdrop-blur-md">
         {/* Ascending graph bars area */}
         <div className="flex items-end justify-center gap-1.5 h-9 w-16 px-1">
           {barHeights.map((targetHeight, index) => {
@@ -55,7 +70,7 @@ export const AscendingGraphLoader: React.FC<AscendingGraphLoaderProps> = ({
                 <div
                   style={{
                     height: isFilled ? `${targetHeight}%` : '8%',
-                    transition: 'height 240ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    transition: 'height 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
                   }}
                   className={`w-full rounded-t-sm transition-all ${
                     isFilled

@@ -3,7 +3,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Maximize2,
+  Scan,
   Square,
 } from 'lucide-react';
 import { galleryPhotos } from '../data/portfolioData';
@@ -112,8 +112,8 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
               <button
                 type="button"
                 onClick={() => setIsContain(true)}
-                title="Small Frame: Huge image appears completely without any crop"
-                aria-label="Small Frame (complete image)"
+                title="Small Frame: Image is fully visible, frame is a bit empty"
+                aria-label="Small Frame (image fully visible, frame a bit empty)"
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   isContain
                     ? 'bg-white text-stone-950 shadow-xs font-bold'
@@ -121,23 +121,23 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
                 }`}
               >
                 <Square className="w-3.5 h-3.5" />
-                <span>Small Frame (Complete)</span>
+                <span>Small Frame</span>
               </button>
 
               {/* Option 2: Full Frame where huge image could get cropped */}
               <button
                 type="button"
                 onClick={() => setIsContain(false)}
-                title="Full Frame: Huge image fills frame completely (could get cropped)"
-                aria-label="Full Frame (could get cropped)"
+                title="Full Frame: Image fits whole frame, cropped if too large"
+                aria-label="Full Frame (fits whole frame, cropped if too large)"
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   !isContain
                     ? 'bg-white text-stone-950 shadow-xs font-bold'
                     : 'text-stone-400 hover:text-stone-200'
                 }`}
               >
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span>Full Frame (Cropped)</span>
+                <Scan className="w-3.5 h-3.5" />
+                <span>Full Frame</span>
               </button>
             </div>
 
@@ -188,7 +188,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
             <div className="shrink-0 flex items-center gap-2">
               <span className="text-[10px] font-mono px-2 py-1 rounded bg-stone-900 border border-stone-800 text-stone-400">
-                {isContain ? 'Small Frame Mode (Complete)' : 'Full Frame Mode (Cropped)'}
+                {isContain ? 'Small Frame (Complete Image)' : 'Full Frame (Cropped Image)'}
               </span>
             </div>
           </div>

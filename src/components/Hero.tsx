@@ -9,8 +9,6 @@ import {
   Play,
   Pause,
   Sparkles,
-  Maximize2,
-  Square,
 } from 'lucide-react';
 import { personalInfo, galleryPhotos, defaultTopPhotos } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
@@ -31,7 +29,6 @@ export const Hero: React.FC<HeroProps> = ({
   const featuredPhotos = defaultTopPhotos;
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [fitMode, setFitMode] = useState<'contain' | 'cover'>('contain');
 
   // Slideshow timer
   useEffect(() => {
@@ -183,42 +180,8 @@ export const Hero: React.FC<HeroProps> = ({
                   </span>
                 </div>
 
-                {/* Exclusive Visitor Choice: Small Frame (Complete) vs Full Frame (Cropped) */}
-                <div className="flex items-center gap-2">
-                  <div className="inline-flex items-center p-0.5 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs">
-                    {/* Option 1: Small Frame (complete) */}
-                    <button
-                      type="button"
-                      onClick={() => setFitMode('contain')}
-                      title="Small Frame: Huge image appears completely without any crop"
-                      aria-label="Small Frame (complete image)"
-                      className={`px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                        fitMode === 'contain'
-                          ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
-                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
-                      }`}
-                    >
-                      <Square className="w-3 h-3" />
-                      <span>Small Frame</span>
-                    </button>
-
-                    {/* Option 2: Full Frame (cropped) */}
-                    <button
-                      type="button"
-                      onClick={() => setFitMode('cover')}
-                      title="Full Frame: Huge image fills frame completely (could get cropped)"
-                      aria-label="Full Frame (could get cropped)"
-                      className={`px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                        fitMode === 'cover'
-                          ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
-                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
-                      }`}
-                    >
-                      <Maximize2 className="w-3 h-3" />
-                      <span>Full Frame</span>
-                    </button>
-                  </div>
-
+                {/* Controls: Slideshow Play/Pause and Next/Previous navigation */}
+                <div className="flex items-center gap-1.5">
                   {/* Play / Pause Slideshow */}
                   <button
                     type="button"
@@ -267,7 +230,7 @@ export const Hero: React.FC<HeroProps> = ({
                   category={currentMeta.category}
                   aspectRatioClass="aspect-[16/10] min-h-[380px] sm:min-h-[460px] md:min-h-[490px] w-full"
                   priority={true}
-                  defaultFit={fitMode}
+                  defaultFit="contain"
                   showFitControls={false}
                   onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
                 />
@@ -311,9 +274,9 @@ export const Hero: React.FC<HeroProps> = ({
                     type="button"
                     onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
                     className="text-xs font-semibold text-[#8B1E28] dark:text-[#E11D48] hover:underline whitespace-nowrap cursor-pointer"
-                    aria-label={`Expand ${currentMeta.title} in full screen view`}
+                    aria-label={`View photo ${currentMeta.title}`}
                   >
-                    Expand
+                    View Photo
                   </button>
                 </div>
               </div>
@@ -358,7 +321,6 @@ export const Hero: React.FC<HeroProps> = ({
                           fileName={file}
                           alt={thumbnailAlt}
                           aspectRatioClass="w-full h-full"
-                          showZoomIcon={false}
                           defaultFit="cover"
                           showFitControls={false}
                         />
