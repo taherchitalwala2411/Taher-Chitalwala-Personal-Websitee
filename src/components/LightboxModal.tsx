@@ -9,7 +9,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { galleryPhotos } from '../data/portfolioData';
-import { getPhoto, getPhotoUrlCandidates } from '../utils/photoStorage';
+import { getPhotoUrlCandidates } from '../utils/photoStorage';
 
 interface LightboxModalProps {
   fileName: string;
@@ -28,7 +28,6 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   onClose,
   onSelectPhoto,
 }) => {
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -37,25 +36,18 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   // Identify if opened from Top Showcase
   const isTopShowcase = source === 'showcase' || category === 'Top Showcase';
 
+  // Load the actual real photo from /photos/ using identical URL candidate logic as PortfolioImage.tsx
   const candidates = getPhotoUrlCandidates(fileName);
+  const currentSrc = candidates[candidateIndex] || `/photos/${encodeURIComponent(fileName)}`;
 
   // Find metadata in galleryPhotos if available
   const currentPhotoMeta = galleryPhotos.find((p) => p.fileName === fileName);
   const currentIndex = galleryPhotos.findIndex((p) => p.fileName === fileName);
 
   useEffect(() => {
-    let active = true;
-    setDataUrl(null);
     setCandidateIndex(0);
     setIsLoaded(false);
     setHasError(false);
-
-    // Retrieve any locally cached or archive data URL if available
-    getPhoto(fileName).then((stored) => {
-      if (active && stored) {
-        setDataUrl(stored);
-      }
-    });
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -71,23 +63,13 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      active = false;
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [fileName, currentIndex, onClose, onSelectPhoto, source]);
 
   const handleImageError = () => {
-    if (!dataUrl && candidateIndex < candidates.length - 1) {
+    if (candidateIndex < candidates.length - 1) {
       setCandidateIndex((prev) => prev + 1);
-    } else if (!dataUrl) {
-      // Pull guaranteed visual archive asset
-      getPhoto(fileName).then((stored) => {
-        if (stored) {
-          setDataUrl(stored);
-        } else {
-          setHasError(true);
-        }
-      });
     } else {
       setHasError(true);
     }
@@ -97,8 +79,6 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
     setIsLoaded(true);
     setHasError(false);
   };
-
-  const currentSrc = dataUrl || candidates[candidateIndex];
 
   const accessibleAltText =
     currentPhotoMeta?.altText ||
@@ -225,9 +205,6 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
                   setHasError(false);
                   setIsLoaded(false);
                   setCandidateIndex(0);
-                  getPhoto(fileName).then((stored) => {
-                    if (stored) setDataUrl(stored);
-                  });
                 }}
                 className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white text-xs font-medium border border-stone-700 transition-colors cursor-pointer"
               >

@@ -1,5 +1,4 @@
-// Client-side photo storage, cross-visitor asset fallback, and cache helper
-import { PHOTO_VISUAL_ASSETS } from '../data/photoAssets';
+// Client-side photo storage and cache helper
 
 const DB_NAME = 'taher_portfolio_photos';
 const DB_VERSION = 1;
@@ -94,16 +93,12 @@ export async function getPhoto(fileName: string): Promise<string | null> {
     // ignore
   }
 
-  // 3. Fallback to guaranteed visual archive asset so all visitors see every milestone photograph
-  if (PHOTO_VISUAL_ASSETS[fileName]) {
-    return PHOTO_VISUAL_ASSETS[fileName];
-  }
-
+  // When no user-uploaded photo is stored in browser storage, return null
   return null;
 }
 
 export async function getAllStoredPhotos(): Promise<Record<string, string>> {
-  const result: Record<string, string> = { ...PHOTO_VISUAL_ASSETS };
+  const result: Record<string, string> = {};
 
   // Pull from localStorage
   try {
@@ -143,11 +138,12 @@ export async function getAllStoredPhotos(): Promise<Record<string, string>> {
   return result;
 }
 
-// Generate candidate paths to check for the image file
+// Generate candidate paths to check for the image file in /photos/
 export function getPhotoUrlCandidates(fileName: string): string[] {
-  const encoded = encodeURIComponent(fileName);
-return [
-  `/photos/${encoded}`,
-  `/photos/${fileName}`,
-];
+  const cleanName = fileName.replace(/^\/?photos\//, '');
+  const encoded = encodeURIComponent(cleanName);
+  return [
+    `/photos/${encoded}`,
+    `/photos/${cleanName}`,
+  ];
 }
