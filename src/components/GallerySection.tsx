@@ -9,7 +9,7 @@ import { PortfolioImage } from './PortfolioImage';
 interface GallerySectionProps {
   isFullView?: boolean;
   onViewAll?: () => void;
-  onOpenPhoto: (fileName: string, title: string, category?: string) => void;
+  onOpenPhoto: (fileName: string, title: string, category?: string, source?: string) => void;
 }
 
 export const GallerySection: React.FC<GallerySectionProps> = ({
@@ -112,7 +112,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                     aspectRatioClass="aspect-[4/3] rounded-xl overflow-hidden"
                     defaultFit={isContainPhoto ? 'contain' : 'cover'}
                     onClick={() =>
-                      onOpenPhoto(photo.fileName, photo.title, photo.category)
+                      onOpenPhoto(photo.fileName, photo.title, photo.category, 'gallery')
                     }
                   />
                 </div>
@@ -148,7 +148,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                     <button
                       type="button"
                       onClick={() =>
-                        onOpenPhoto(photo.fileName, photo.title, photo.category)
+                        onOpenPhoto(photo.fileName, photo.title, photo.category, 'gallery')
                       }
                       className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                       aria-label={`View ${photo.title} details`}

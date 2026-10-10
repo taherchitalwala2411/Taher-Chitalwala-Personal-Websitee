@@ -81,6 +81,7 @@ function PortfolioApp() {
     fileName: string;
     title: string;
     category?: string;
+    source?: string;
   } | null>(null);
 
   const navigationSessionRef = useRef<number>(0);
@@ -205,8 +206,13 @@ function PortfolioApp() {
     });
   };
 
-  const handleOpenPhoto = (fileName: string, title: string, category?: string) => {
-    setLightboxPhoto({ fileName, title, category });
+  const handleOpenPhoto = (
+    fileName: string,
+    title: string,
+    category?: string,
+    source?: string
+  ) => {
+    setLightboxPhoto({ fileName, title, category, source });
   };
 
   return (
@@ -338,9 +344,15 @@ function PortfolioApp() {
           fileName={lightboxPhoto.fileName}
           title={lightboxPhoto.title}
           category={lightboxPhoto.category}
+          source={lightboxPhoto.source}
           onClose={() => setLightboxPhoto(null)}
-          onSelectPhoto={(fileName, title, category) =>
-            setLightboxPhoto({ fileName, title, category })
+          onSelectPhoto={(fileName, title, category, source) =>
+            setLightboxPhoto({
+              fileName,
+              title,
+              category,
+              source: source || lightboxPhoto.source,
+            })
           }
         />
       )}

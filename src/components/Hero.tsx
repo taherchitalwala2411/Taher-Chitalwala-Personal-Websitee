@@ -16,7 +16,7 @@ import { PortfolioImage } from './PortfolioImage';
 interface HeroProps {
   onExplore: () => void;
   onConnect: () => void;
-  onOpenPhoto: (fileName: string, title: string, category?: string) => void;
+  onOpenPhoto: (fileName: string, title: string, category?: string, source?: string) => void;
   onNavigateToGallery?: () => void;
 }
 
@@ -232,7 +232,7 @@ export const Hero: React.FC<HeroProps> = ({
                   priority={true}
                   defaultFit="contain"
                   showFitControls={false}
-                  onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
+                  onClick={() => onOpenPhoto(currentFileName, currentMeta.title, 'Top Showcase', 'showcase')}
                 />
 
                 {/* Arrow Overlays on Hover */}
@@ -272,7 +272,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <div className="flex items-center gap-3 shrink-0">
                   <button
                     type="button"
-                    onClick={() => onOpenPhoto(currentFileName, currentMeta.title, currentMeta.category)}
+                    onClick={() => onOpenPhoto(currentFileName, currentMeta.title, 'Top Showcase', 'showcase')}
                     className="text-xs font-semibold text-[#8B1E28] dark:text-[#E11D48] hover:underline whitespace-nowrap cursor-pointer"
                     aria-label={`View photo ${currentMeta.title}`}
                   >

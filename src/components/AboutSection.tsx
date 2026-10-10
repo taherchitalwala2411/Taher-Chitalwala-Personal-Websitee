@@ -15,7 +15,7 @@ import { personalInfo, aboutMeNarrative } from '../data/portfolioData';
 interface AboutSectionProps {
   isFullView?: boolean;
   onReadMore?: () => void;
-  onOpenPhoto?: (fileName: string, title: string) => void;
+  onOpenPhoto?: (fileName: string, title: string, category?: string, source?: string) => void;
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({

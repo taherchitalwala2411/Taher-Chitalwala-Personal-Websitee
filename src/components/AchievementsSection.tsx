@@ -6,6 +6,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Sparkles,
+  Eye,
 } from 'lucide-react';
 import { achievementsList, personalInfo } from '../data/portfolioData';
 import { PortfolioImage } from './PortfolioImage';
@@ -13,7 +14,7 @@ import { PortfolioImage } from './PortfolioImage';
 interface AchievementsSectionProps {
   isFullView?: boolean;
   onViewAll?: () => void;
-  onOpenPhoto: (fileName: string, title: string) => void;
+  onOpenPhoto: (fileName: string, title: string, category?: string, source?: string) => void;
 }
 
 export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
@@ -137,7 +138,12 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                     aspectRatioClass="aspect-[16/11] bg-stone-100/50 dark:bg-stone-800/80 rounded-lg overflow-hidden"
                     defaultFit="contain"
                     onClick={() =>
-                      onOpenPhoto(item.photoName!, `${item.title} — ${item.subtitle || ''}`)
+                      onOpenPhoto(
+                        item.photoName!,
+                        `${item.title} — ${item.subtitle || ''}`,
+                        'Achievements',
+                        'achievements'
+                      )
                     }
                   />
                 </div>
@@ -170,6 +176,30 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
                     {item.description}
                   </p>
                 </div>
+
+                {item.photoName && (
+                  <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between">
+                    <span className="text-[10px] font-mono text-stone-400 dark:text-stone-500 truncate max-w-[150px]">
+                      {item.photoName}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onOpenPhoto(
+                          item.photoName!,
+                          `${item.title} — ${item.subtitle || ''}`,
+                          'Achievements',
+                          'achievements'
+                        )
+                      }
+                      className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ml-auto"
+                      aria-label={`View photo for ${item.title}`}
+                    >
+                      <span>View Photo</span>
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
