@@ -478,16 +478,6 @@ export const galleryPhotos: GalleryPhoto[] = [
       'Taher Chitalwala posing in a group photograph with Bollywood actor Zayed Khan during a reception event in Mumbai.',
   },
   {
-    id: 'photo-iimun-team-arch',
-    fileName: 'IIMUN EVENT 1.jpeg',
-    title: 'IIMUN Team & Committee Family',
-    category: 'IIMUN Events',
-    description:
-      'Celebrating successful conference outcomes with fellow youth volunteers, organizers, and committee delegates.',
-    altText:
-      'Taher Chitalwala standing together with fellow IIMUN youth organizers, volunteers, and delegates beneath a grand decorative entrance arch.',
-  },
-  {
     id: 'photo-iimun-memento',
     fileName: 'IIMUN event 2.jpeg',
     title: 'Felicitating an international luminary at 15 Years of IIMUN',

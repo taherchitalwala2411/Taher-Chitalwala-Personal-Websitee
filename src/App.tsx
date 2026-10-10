@@ -57,7 +57,6 @@ const viewAssetsMap: Record<ViewMode, string[]> = {
   gallery: [
     'Head boy image 2.jpeg',
     'Headboy image.jpeg',
-    'IIMUN EVENT 1.jpeg',
     'IIMUN event 2.jpeg',
     'IIMUN event 3.jpeg',
     'IIMUN event 4.jpeg',
