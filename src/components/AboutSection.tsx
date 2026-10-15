@@ -88,13 +88,19 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
                 {onReadMore && (
                   <div className="pt-2">
-                    <button
-                      onClick={onReadMore}
+                    <a
+                      href="/about"
+                      onClick={(e) => {
+                        if (!e.metaKey && !e.ctrlKey) {
+                          e.preventDefault();
+                          onReadMore();
+                        }
+                      }}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
                     >
                       <span>Read Complete Story</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                    </a>
                   </div>
                 )}
               </>

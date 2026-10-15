@@ -166,13 +166,19 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
         {/* View All CTA on Home Page preview */}
         {!isFullView && onViewAll && (
           <div className="mt-12 text-center">
-            <button
-              onClick={onViewAll}
+            <a
+              href="/gallery"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onViewAll();
+                }
+              }}
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
             >
               <span>Explore Complete Photo Archive ({galleryPhotos.length} Photos)</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </a>
           </div>
         )}
       </div>

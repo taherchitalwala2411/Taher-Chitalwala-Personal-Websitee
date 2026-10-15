@@ -23,15 +23,13 @@ import { TopProgressBar } from './components/TopProgressBar';
 import { ToastContainer } from './components/ToastNotification';
 import { NotificationProvider } from './context/NotificationContext';
 import { getPhotoUrlCandidates } from './utils/photoStorage';
-
-type ViewMode =
-  | 'home'
-  | 'about'
-  | 'achievements'
-  | 'experience'
-  | 'projects'
-  | 'gallery'
-  | 'contact';
+import { galleryPhotos } from './data/portfolioData';
+import {
+  ViewMode,
+  getViewFromPath,
+  getPathFromView,
+  updateDocumentMetadata,
+} from './utils/navigation';
 
 // Map each view to its primary image assets so we can track real-time loading progress
 const viewAssetsMap: Record<ViewMode, string[]> = {
@@ -70,10 +68,14 @@ const viewAssetsMap: Record<ViewMode, string[]> = {
     'WhatsApp Image 2026-10-07 at 8.49.04 AM.jpeg',
   ],
   contact: [],
+  education: [],
+  skills: [],
 };
 
 function PortfolioApp() {
-  const [currentView, setCurrentView] = useState<ViewMode>('home');
+  const initialMatched = getViewFromPath(window.location.pathname);
+  const [currentView, setCurrentView] = useState<ViewMode>(initialMatched || 'home');
+  const [isNotFound, setIsNotFound] = useState<boolean>(initialMatched === null && window.location.pathname !== '/');
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const [loadProgress, setLoadProgress] = useState<number>(0);
   const [lightboxPhoto, setLightboxPhoto] = useState<{
@@ -85,15 +87,67 @@ function PortfolioApp() {
 
   const navigationSessionRef = useRef<number>(0);
 
+  // Synchronize document title and meta description on view or route changes
+  useEffect(() => {
+    if (isNotFound) {
+      document.title = 'Page Not Found · 404 | Taher Chitalwala';
+    } else {
+      updateDocumentMetadata(currentView);
+    }
+  }, [currentView, isNotFound]);
+
+  // Handle browser Back / Forward history navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const matched = getViewFromPath(window.location.pathname);
+      if (matched) {
+        setIsNotFound(false);
+        setCurrentView(matched);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else {
+        setIsNotFound(true);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Check URL parameters on mount (e.g., direct photo deep link)
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const photoParam = searchParams.get('photo');
+    if (photoParam) {
+      const match = galleryPhotos.find(
+        (p) =>
+          p.fileName.toLowerCase() === photoParam.toLowerCase() ||
+          p.id.toLowerCase() === photoParam.toLowerCase()
+      );
+      if (match) {
+        setLightboxPhoto({
+          fileName: match.fileName,
+          title: match.title,
+          category: match.category,
+        });
+      }
+    }
+  }, []);
+
   // Scroll to top when view changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView]);
 
-  const handleNavigate = (sectionId: string) => {
+  const handleNavigate = (sectionId: string, pushToHistory = true) => {
     const targetView = sectionId as ViewMode;
+    setIsNotFound(false);
 
-    if (targetView === currentView) {
+    const cleanPath = getPathFromView(targetView);
+    if (pushToHistory && window.location.pathname !== cleanPath) {
+      window.history.pushState({ view: targetView }, '', cleanPath);
+    }
+
+    if (targetView === currentView && !isNotFound) {
       if (currentView === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -214,6 +268,15 @@ function PortfolioApp() {
     setLightboxPhoto({ fileName, title, category, source });
   };
 
+  const handleClosePhoto = () => {
+    setLightboxPhoto(null);
+    const currentUrl = new URL(window.location.href);
+    if (currentUrl.searchParams.has('photo')) {
+      currentUrl.searchParams.delete('photo');
+      window.history.replaceState({}, '', currentUrl.pathname + (currentUrl.search ? currentUrl.search : ''));
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF9F5] dark:bg-[#121110] text-stone-900 dark:text-stone-100 transition-colors duration-300 selection:bg-[#8B1E28]/15 selection:text-[#8B1E28] dark:selection:bg-[#E11D48]/25 dark:selection:text-[#E11D48]">
       {/* Subtle linear progress bar at the very top of the screen */}
@@ -224,14 +287,90 @@ function PortfolioApp() {
 
       {/* Navigation with Theme Switcher */}
       <Navbar
-        activeSection={currentView}
+        activeSection={isNotFound ? '' : currentView}
         onNavigate={handleNavigate}
-        isHomeView={currentView === 'home'}
+        isHomeView={currentView === 'home' && !isNotFound}
       />
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {currentView === 'home' ? (
+        {isNotFound ? (
+          /* 404 NOT FOUND VIEW */
+          <div className="pt-32 pb-24 max-w-3xl mx-auto px-6 text-center animate-in fade-in duration-300">
+            <span className="inline-block text-xs font-mono font-bold uppercase tracking-widest text-[#8B1E28] dark:text-[#E11D48] px-3.5 py-1.5 rounded-full bg-[#8B1E28]/10 dark:bg-[#E11D48]/10 border border-[#8B1E28]/20 dark:border-[#E11D48]/20">
+              404 · Page Not Found
+            </span>
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 mt-5 mb-3">
+              Lost in the Journey?
+            </h1>
+            <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 max-w-md mx-auto mb-8">
+              The page at <code className="text-xs sm:text-sm font-mono bg-stone-200/70 dark:bg-stone-800 px-2 py-0.5 rounded text-stone-900 dark:text-stone-100">{window.location.pathname}</code> does not exist or has moved. Explore one of the clean paths below:
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+              <a
+                href="/"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    handleNavigate('home');
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-md cursor-pointer hover:-translate-y-0.5"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Home (/)</span>
+              </a>
+              <a
+                href="/about"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    handleNavigate('about');
+                  }
+                }}
+                className="px-4 py-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold hover:bg-stone-200 dark:hover:bg-stone-700 transition-all border border-stone-200/80 dark:border-stone-700"
+              >
+                About (/about)
+              </a>
+              <a
+                href="/achievements"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    handleNavigate('achievements');
+                  }
+                }}
+                className="px-4 py-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold hover:bg-stone-200 dark:hover:bg-stone-700 transition-all border border-stone-200/80 dark:border-stone-700"
+              >
+                Achievements (/achievements)
+              </a>
+              <a
+                href="/gallery"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    handleNavigate('gallery');
+                  }
+                }}
+                className="px-4 py-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold hover:bg-stone-200 dark:hover:bg-stone-700 transition-all border border-stone-200/80 dark:border-stone-700"
+              >
+                Gallery (/gallery)
+              </a>
+              <a
+                href="/contact"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    handleNavigate('contact');
+                  }
+                }}
+                className="px-4 py-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold hover:bg-stone-200 dark:hover:bg-stone-700 transition-all border border-stone-200/80 dark:border-stone-700"
+              >
+                Contact (/contact)
+              </a>
+            </div>
+          </div>
+        ) : currentView === 'home' ? (
           /* LONG SCROLLING LANDING HOME EXPERIENCE */
           <>
             {/* 1. Hero: Only Flag Ceremony, Air Force, NIE TOI, Shelf */}
@@ -287,17 +426,23 @@ function PortfolioApp() {
             <ContactSection />
           </>
         ) : (
-          /* DEDICATED SECTION VIEWS */
+          /* DEDICATED SECTION VIEWS WITH CLEAN SHORT URLS */
           <div className="pt-24 pb-12">
             {/* Back to Home Breadcrumb Banner */}
             <div className="max-w-7xl mx-auto px-6 sm:px-8 mb-4">
-              <button
-                onClick={() => handleNavigate('home')}
+              <a
+                href="/"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    handleNavigate('home');
+                  }
+                }}
                 className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 px-3.5 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200/70 dark:hover:bg-stone-700/70 transition-colors cursor-pointer border border-stone-200/70 dark:border-stone-700"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Back to Full Journey (Home)</span>
-              </button>
+                <span>Back to Full Journey (Home · /)</span>
+              </a>
             </div>
 
             {currentView === 'about' && (
@@ -330,6 +475,18 @@ function PortfolioApp() {
             )}
 
             {currentView === 'contact' && <ContactSection />}
+
+            {currentView === 'education' && (
+              <div className="pt-2">
+                <EducationSection />
+              </div>
+            )}
+
+            {currentView === 'skills' && (
+              <div className="pt-2">
+                <SkillsSection />
+              </div>
+            )}
           </div>
         )}
       </main>
@@ -344,7 +501,7 @@ function PortfolioApp() {
           title={lightboxPhoto.title}
           category={lightboxPhoto.category}
           source={lightboxPhoto.source}
-          onClose={() => setLightboxPhoto(null)}
+          onClose={handleClosePhoto}
           onSelectPhoto={(fileName, title, category, source) =>
             setLightboxPhoto({
               fileName,

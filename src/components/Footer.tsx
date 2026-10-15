@@ -30,48 +30,90 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Quick Links */}
           <nav className="flex flex-wrap items-center gap-6 text-xs font-semibold text-stone-400">
-            <button
-              onClick={() => onNavigate('home')}
+            <a
+              href="/"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('home');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               HOME
-            </button>
-            <button
-              onClick={() => onNavigate('about')}
+            </a>
+            <a
+              href="/about"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('about');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               ABOUT ME
-            </button>
-            <button
-              onClick={() => onNavigate('achievements')}
+            </a>
+            <a
+              href="/achievements"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('achievements');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               ACHIEVEMENTS
-            </button>
-            <button
-              onClick={() => onNavigate('experience')}
+            </a>
+            <a
+              href="/experience"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('experience');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               WORK EXPERIENCE
-            </button>
-            <button
-              onClick={() => onNavigate('projects')}
+            </a>
+            <a
+              href="/projects"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('projects');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               PROJECTS
-            </button>
-            <button
-              onClick={() => onNavigate('gallery')}
+            </a>
+            <a
+              href="/gallery"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('gallery');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               GALLERY
-            </button>
-            <button
-              onClick={() => onNavigate('contact')}
+            </a>
+            <a
+              href="/contact"
+              onClick={(e) => {
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  onNavigate('contact');
+                }
+              }}
               className="hover:text-white transition-colors cursor-pointer"
             >
               CONTACT
-            </button>
+            </a>
           </nav>
 
           {/* Scroll to Top */}

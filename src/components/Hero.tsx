@@ -147,21 +147,31 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* Primary Action Buttons */}
             <div className="flex flex-wrap items-center gap-3">
-              <button
-                onClick={onExplore}
+              <a
+                href="#about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onExplore();
+                }}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-md group cursor-pointer hover:-translate-y-0.5"
               >
                 <span>Explore My Journey</span>
                 <ArrowDown className="w-3.5 h-3.5 text-stone-400 dark:text-stone-600 group-hover:translate-y-0.5 transition-transform" />
-              </button>
+              </a>
 
-              <button
-                onClick={onConnect}
+              <a
+                href="/contact"
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    onConnect();
+                  }
+                }}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-bold border border-stone-300 dark:border-stone-700 transition-all shadow-xs cursor-pointer hover:-translate-y-0.5"
               >
                 <span>Let's Connect</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
-              </button>
+              </a>
             </div>
           </div>
 
