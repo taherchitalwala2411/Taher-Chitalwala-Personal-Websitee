@@ -28,19 +28,20 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   const displayedProjects = isFullView ? projectsList : projectsList.slice(0, 3);
 
   return (
-    <section id="projects" className="py-16 md:py-22 border-t border-stone-200/80 dark:border-stone-800 bg-[#FAF9F5] dark:bg-[#121110] transition-colors duration-300">
+    <section id="projects" className="py-20 md:py-28 border-t border-white/5 bg-[#060606] text-[#EBE7E1] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48]">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#C17F24] flex items-center gap-2">
+              <span className="w-6 h-px bg-[#C17F24]/60" />
               05 · Applied Studies & Research
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 mt-1">
+            <h2 className="text-4xl sm:text-5xl font-display uppercase tracking-wider text-white mt-2">
               Projects & Case Studies
             </h2>
           </div>
-          <p className="text-sm text-stone-500 dark:text-stone-400 max-w-md">
+          <p className="text-sm text-[#8E8880] max-w-md font-sans">
             Academic field research, business strategic analyses, and practical presentations from degree college studies.
           </p>
         </div>
@@ -50,41 +51,41 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           {displayedProjects.map((project, idx) => (
             <div
               key={project.id}
-              className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+              className="p-6 sm:p-8 rounded-2xl bg-[#121110] border border-white/10 shadow-lg hover:border-[#C17F24]/40 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-xs font-semibold text-[#8B1E28] dark:text-[#E11D48]">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#C17F24] font-semibold">
                     {project.category}
                   </span>
-                  <span className="text-xs font-mono text-stone-400 dark:text-stone-500">
+                  <span className="text-xs font-mono text-[#8E8880]">
                     0{idx + 1}
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-stone-950 dark:text-stone-50 leading-snug">
+                <h3 className="text-xl font-display uppercase tracking-wide text-white group-hover:text-[#E09830] transition-colors leading-snug">
                   {project.title}
                 </h3>
 
-                <p className="text-xs font-medium text-stone-500 dark:text-stone-400 mt-1">
+                <p className="text-xs font-serif italic text-[#8E8880] mt-1">
                   {project.subtitle}
                 </p>
 
-                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-4 leading-relaxed line-clamp-4">
+                <p className="text-xs sm:text-sm text-[#A09A92] mt-4 leading-relaxed line-clamp-4">
                   {project.description}
                 </p>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between">
+              <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setSelectedProject(project)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-900 dark:text-stone-100 hover:text-[#8B1E28] dark:hover:text-[#E11D48] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#C17F24] hover:text-[#E09830] transition-colors cursor-pointer"
                 >
                   <span>View Project Details</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
-                <span className="text-[11px] font-mono text-stone-400 dark:text-stone-500">
+                <span className="text-[11px] font-mono text-[#8E8880]">
                   {project.tags[0]}
                 </span>
               </div>
@@ -94,7 +95,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
 
         {/* View All CTA on Home Page */}
         {!isFullView && onViewAll && (
-          <div className="mt-12 text-center">
+          <div className="mt-14 text-center">
             <a
               href="/projects"
               onClick={(e) => {
@@ -103,10 +104,10 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   onViewAll();
                 }
               }}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#C17F24] hover:bg-[#E09830] text-[#060606] font-display text-sm tracking-widest uppercase transition-all shadow-lg shadow-[#C17F24]/20 cursor-pointer hover:-translate-y-0.5 font-bold"
             >
               <span>Explore All Projects & Research</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         )}
@@ -114,50 +115,50 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
 
       {/* Project Detail Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-stone-950/70 backdrop-blur-xs animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
           <div
-            className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-stone-900 rounded-2xl shadow-2xl border border-stone-200 dark:border-stone-800 p-6 sm:p-10 relative text-stone-900 dark:text-stone-100"
+            className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#121110] rounded-2xl shadow-2xl border border-white/10 p-6 sm:p-10 relative text-[#EBE7E1]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 transition-colors cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-[#8E8880] hover:text-white transition-colors cursor-pointer"
               aria-label="Close project modal"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <span className="text-xs font-mono uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#C17F24] font-bold">
               {selectedProject.category}
             </span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-stone-950 dark:text-stone-50 mt-1">
+            <h3 className="text-2xl sm:text-3xl font-display uppercase tracking-wide text-white mt-1">
               {selectedProject.title}
             </h3>
-            <p className="text-sm font-semibold text-stone-500 dark:text-stone-400 mt-1">
+            <p className="text-sm font-serif italic text-[#8E8880] mt-1">
               {selectedProject.subtitle}
             </p>
 
-            <p className="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed mt-6">
+            <p className="text-sm sm:text-base text-[#DCD7CE] leading-relaxed mt-6">
               {selectedProject.description}
             </p>
 
             {/* Role callout */}
-            <div className="mt-6 p-4 rounded-xl bg-stone-50 dark:bg-stone-800/60 border border-stone-100 dark:border-stone-800 flex items-center justify-between">
-              <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">My Contribution</span>
-              <span className="text-xs font-bold text-stone-900 dark:text-stone-100">{selectedProject.role}</span>
+            <div className="mt-6 p-4 rounded-xl bg-[#161616] border border-white/10 flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#8E8880]">My Contribution</span>
+              <span className="text-xs font-bold text-[#E09830]">{selectedProject.role}</span>
             </div>
 
             {/* Key Findings */}
             {selectedProject.keyFindings && selectedProject.keyFindings.length > 0 && (
               <div className="mt-8">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-[#C17F24] mb-3">
                   Key Findings & Core Insights
                 </h4>
                 <div className="space-y-2.5">
                   {selectedProject.keyFindings.map((finding, fIdx) => (
-                    <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
-                      <CheckCircle2 className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48] shrink-0 mt-0.5" />
+                    <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#DCD7CE]">
+                      <CheckCircle2 className="w-4 h-4 text-[#C17F24] shrink-0 mt-0.5" />
                       <span>{finding}</span>
                     </div>
                   ))}
@@ -168,13 +169,13 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             {/* Practical Learnings */}
             {selectedProject.keyLearnings && selectedProject.keyLearnings.length > 0 && (
               <div className="mt-8">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-[#C17F24] mb-3">
                   Practical Methodology & Execution
                 </h4>
                 <div className="space-y-2.5">
                   {selectedProject.keyLearnings.map((learning, lIdx) => (
-                    <div key={lIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
-                      <span className="text-[#8B1E28] dark:text-[#E11D48] font-bold">·</span>
+                    <div key={lIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#DCD7CE]">
+                      <span className="text-[#C17F24] font-bold">·</span>
                       <span>{learning}</span>
                     </div>
                   ))}
@@ -183,12 +184,12 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             )}
 
             {/* Tags & Close */}
-            <div className="mt-10 pt-6 border-t border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-10 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
               <div className="flex flex-wrap gap-1.5">
                 {selectedProject.tags.map((tag, tIdx) => (
                   <span
                     key={tIdx}
-                    className="px-2.5 py-1 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 text-[11px] font-mono"
+                    className="px-2.5 py-1 rounded-md bg-[#161616] border border-white/5 text-[#8E8880] text-[11px] font-mono"
                   >
                     #{tag}
                   </span>
@@ -198,7 +199,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedProject(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 hover:bg-stone-800 dark:hover:bg-white/90 transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl text-xs font-display tracking-widest uppercase bg-[#C17F24] hover:bg-[#E09830] text-[#060606] font-bold transition-colors cursor-pointer"
               >
                 Close Project
               </button>

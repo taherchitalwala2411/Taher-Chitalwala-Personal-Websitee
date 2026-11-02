@@ -33,11 +33,11 @@ export const TopProgressBar: React.FC<TopProgressBarProps> = ({
       <div className="w-full h-[2.5px] sm:h-[3px] bg-stone-200/20 dark:bg-stone-800/20 overflow-hidden relative">
         {/* Progress Fill Bar */}
         <div
-          className="h-full bg-gradient-to-r from-[#8B1E28] via-[#E11D48] to-[#FB7185] shadow-[0_0_10px_rgba(225,29,72,0.7)] transition-[width] duration-150 ease-out relative"
+          className="h-full bg-gradient-to-r from-[#9E641B] via-[#C17F24] to-[#E09830] shadow-[0_0_10px_rgba(193,127,36,0.7)] transition-[width] duration-150 ease-out relative"
           style={{ width: `${clampedProgress}%` }}
         >
           {/* Subtle glowing tip at the leading head of the progress bar */}
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-r from-transparent to-white/80 shadow-[0_0_8px_#FFF] opacity-90" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-r from-transparent to-[#F5D5A6] shadow-[0_0_8px_#C17F24] opacity-90" />
         </div>
       </div>
     </div>

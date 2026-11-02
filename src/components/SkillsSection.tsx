@@ -15,33 +15,33 @@ import {
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
-  'Effective Communication': <MessageSquare className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48]" />,
-  'Leadership': <Compass className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48]" />,
-  'Teamwork': <Users className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48]" />,
-  'Problem Solving': <Lightbulb className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48]" />,
-  'Decision Making': <Layers className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48]" />,
-  'Microsoft Word': <FileText className="w-4 h-4 text-stone-600 dark:text-stone-400" />,
-  'Microsoft Excel': <FileSpreadsheet className="w-4 h-4 text-stone-600 dark:text-stone-400" />,
-  'Microsoft PowerPoint': <Presentation className="w-4 h-4 text-stone-600 dark:text-stone-400" />,
-  'Basic Computer Skills': <Cpu className="w-4 h-4 text-stone-600 dark:text-stone-400" />,
-  'AI Skills & AI Tools': <Sparkles className="w-4 h-4 text-[#8B1E28] dark:text-[#E11D48]" />,
-  'Photography & Videography': <Camera className="w-4 h-4 text-stone-600 dark:text-stone-400" />,
+  'Effective Communication': <MessageSquare className="w-4 h-4 text-[#C17F24]" />,
+  'Leadership': <Compass className="w-4 h-4 text-[#C17F24]" />,
+  'Teamwork': <Users className="w-4 h-4 text-[#C17F24]" />,
+  'Problem Solving': <Lightbulb className="w-4 h-4 text-[#C17F24]" />,
+  'Decision Making': <Layers className="w-4 h-4 text-[#C17F24]" />,
+  'Microsoft Word': <FileText className="w-4 h-4 text-stone-400" />,
+  'Microsoft Excel': <FileSpreadsheet className="w-4 h-4 text-stone-400" />,
+  'Microsoft PowerPoint': <Presentation className="w-4 h-4 text-stone-400" />,
+  'Basic Computer Skills': <Cpu className="w-4 h-4 text-stone-400" />,
+  'AI Skills & AI Tools': <Sparkles className="w-4 h-4 text-[#C17F24]" />,
+  'Photography & Videography': <Camera className="w-4 h-4 text-stone-400" />,
 };
 
 export const SkillsSection: React.FC = () => {
   return (
-    <section id="skills" className="py-16 md:py-22 border-t border-stone-200/80 dark:border-stone-800 bg-gradient-to-b from-[#FAF9F5] via-[#F7F4EB] to-[#FAF9F5] dark:from-[#121110] dark:via-[#161513] dark:to-[#121110] transition-colors duration-300">
+    <section id="skills" className="py-16 md:py-24 border-t border-white/[0.07] bg-[#060606] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4 pb-6 border-b border-white/[0.08]">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48]">
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#C17F24]">
               03 · Practical Capabilities
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 mt-1">
+            <h2 className="font-display text-4xl sm:text-5xl tracking-[0.04em] uppercase text-[#EBE7E1] mt-2 font-normal">
               Skills & Capabilities
             </h2>
           </div>
-          <p className="text-sm text-stone-500 dark:text-stone-400 max-w-md">
+          <p className="text-sm text-[#8E8880] max-w-md font-light">
             Grounded strengths built through student leadership, practical office productivity, AI exploration, and visual storytelling.
           </p>
         </div>
@@ -50,12 +50,12 @@ export const SkillsSection: React.FC = () => {
           {skillCategories.map((category, catIdx) => (
             <div
               key={catIdx}
-              className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-xs flex flex-col justify-between transition-colors"
+              className="p-6 sm:p-8 rounded-2xl bg-[#121110] border border-white/10 hover:border-[#C17F24]/40 shadow-xl flex flex-col justify-between transition-all"
             >
               <div>
-                <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 tracking-tight pb-4 border-b border-stone-100 dark:border-stone-800 flex items-center justify-between">
+                <h3 className="text-base font-display tracking-wider uppercase text-[#EBE7E1] pb-4 border-b border-white/[0.08] flex items-center justify-between">
                   <span>{category.title}</span>
-                  <span className="text-[11px] font-mono text-stone-400 dark:text-stone-500">
+                  <span className="text-xs font-mono text-[#C17F24]">
                     0{catIdx + 1}
                   </span>
                 </h3>
@@ -64,15 +64,15 @@ export const SkillsSection: React.FC = () => {
                   {category.skills.map((skill, sIdx) => (
                     <li key={sIdx} className="group">
                       <div className="flex items-center gap-3">
-                        <span className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 group-hover:bg-stone-200/70 dark:group-hover:bg-stone-700/70 transition-colors shrink-0">
-                          {iconMap[skill.name] || <Layers className="w-4 h-4 text-stone-600 dark:text-stone-400" />}
+                        <span className="p-2 rounded-lg bg-[#181818] border border-white/5 group-hover:border-[#C17F24]/30 transition-colors shrink-0">
+                          {iconMap[skill.name] || <Layers className="w-4 h-4 text-stone-400" />}
                         </span>
                         <div>
-                          <p className="text-sm font-semibold text-stone-900 dark:text-stone-100 group-hover:text-[#8B1E28] dark:group-hover:text-[#E11D48] transition-colors">
+                          <p className="text-sm font-semibold text-[#EBE7E1] group-hover:text-[#C17F24] transition-colors">
                             {skill.name}
                           </p>
                           {skill.note && (
-                            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                            <p className="text-xs text-[#8E8880] mt-0.5 font-light">
                               {skill.note}
                             </p>
                           )}
@@ -83,7 +83,7 @@ export const SkillsSection: React.FC = () => {
                 </ul>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-stone-100 dark:border-stone-800 text-[11px] text-stone-400 dark:text-stone-500">
+              <div className="mt-8 pt-4 border-t border-white/[0.08] text-[11px] text-stone-500 font-mono">
                 Grounded in actual execution, not arbitrary rating numbers.
               </div>
             </div>

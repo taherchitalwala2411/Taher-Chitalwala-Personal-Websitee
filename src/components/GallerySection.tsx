@@ -46,34 +46,35 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
         .slice(0, 6);
 
   return (
-    <section id="gallery" className="py-16 md:py-22 border-t border-stone-200/80 dark:border-stone-800 bg-gradient-to-b from-[#FAF9F5] via-[#F6F3EB] to-[#FAF9F5] dark:from-[#121110] dark:via-[#161513] dark:to-[#121110] relative transition-colors duration-300">
+    <section id="gallery" className="py-20 md:py-28 border-t border-white/5 bg-[#060606] text-[#EBE7E1] relative transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48]">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#C17F24] flex items-center gap-2">
+              <span className="w-6 h-px bg-[#C17F24]/60" />
               06 · Visual Archive
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 mt-1">
+            <h2 className="text-4xl sm:text-5xl font-display uppercase tracking-wider text-white mt-2">
               Photo Gallery
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 font-mono">
+          <p className="text-xs sm:text-sm text-[#8E8880] font-mono">
             {galleryPhotos.length} Documented Photographic Highlights
           </p>
         </div>
 
         {/* Category Filters (when in Full View) */}
         {isFullView && (
-          <div className="flex flex-wrap items-center gap-2 mb-8 pb-4 border-b border-stone-200/70 dark:border-stone-800">
+          <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-white/10">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide uppercase transition-all cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 hover:bg-stone-200/70 dark:hover:bg-stone-700'
+                    ? 'bg-[#C17F24] text-[#060606] font-bold shadow-md shadow-[#C17F24]/20'
+                    : 'bg-[#141414] text-[#8E8880] border border-white/5 hover:text-white hover:border-[#C17F24]/40 hover:bg-[#1a1a1a]'
                 }`}
               >
                 {cat}
@@ -101,9 +102,9 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             return (
               <div
                 key={photo.id}
-                className="group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                className="group rounded-2xl bg-[#121110] border border-white/10 overflow-hidden shadow-lg hover:border-[#C17F24]/40 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
               >
-                <div className="relative bg-stone-100 dark:bg-stone-800 cursor-pointer overflow-hidden p-1">
+                <div className="relative bg-[#161616] cursor-pointer overflow-hidden p-1.5">
                   <PortfolioImage
                     fileName={photo.fileName}
                     alt={accessibleAlt}
@@ -117,31 +118,31 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                   />
                 </div>
 
-                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48] font-bold">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-[#C17F24] font-bold">
                         {photo.category}
                       </span>
                       {photo.date && (
-                        <span className="text-[11px] font-mono text-stone-400 dark:text-stone-500">
+                        <span className="text-[11px] font-mono text-[#8E8880]">
                           {photo.date}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-sm sm:text-base font-bold text-stone-950 dark:text-stone-50 leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-[#E09830] transition-colors leading-snug">
                       {photo.title}
                     </h3>
 
-                    <p className="text-xs text-stone-600 dark:text-stone-300 mt-1.5 leading-relaxed">
+                    <p className="text-xs text-[#8E8880] mt-2 leading-relaxed">
                       {photo.description}
                     </p>
                   </div>
 
                   {/* Card Bottom Expand Action */}
-                  <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-[11px]">
-                    <span className="text-stone-400 font-mono text-[10px]">
+                  <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-[11px]">
+                    <span className="text-[#6A6560] font-mono text-[10px] truncate max-w-[150px]">
                       {photo.fileName}
                     </span>
 
@@ -150,7 +151,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                       onClick={() =>
                         onOpenPhoto(photo.fileName, photo.title, photo.category, 'gallery')
                       }
-                      className="text-stone-700 dark:text-stone-300 hover:text-[#8B1E28] dark:hover:text-[#E11D48] font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+                      className="text-[#C17F24] hover:text-[#E09830] font-semibold tracking-wide transition-colors flex items-center gap-1.5 cursor-pointer"
                       aria-label={`View ${photo.title} details`}
                     >
                       <span>View Photo</span>
@@ -165,7 +166,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
 
         {/* View All CTA on Home Page preview */}
         {!isFullView && onViewAll && (
-          <div className="mt-12 text-center">
+          <div className="mt-14 text-center">
             <a
               href="/gallery"
               onClick={(e) => {
@@ -174,10 +175,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                   onViewAll();
                 }
               }}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#C17F24] hover:bg-[#E09830] text-[#060606] font-display text-sm tracking-widest uppercase transition-all shadow-lg shadow-[#C17F24]/20 cursor-pointer hover:-translate-y-0.5 font-bold"
             >
               <span>Explore Complete Photo Archive ({galleryPhotos.length} Photos)</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         )}

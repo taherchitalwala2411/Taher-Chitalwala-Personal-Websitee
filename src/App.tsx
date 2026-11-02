@@ -20,6 +20,7 @@ import { Footer } from './components/Footer';
 import { LightboxModal } from './components/LightboxModal';
 import { AscendingGraphLoader } from './components/AscendingGraphLoader';
 import { TopProgressBar } from './components/TopProgressBar';
+import { IntroScreen } from './components/IntroScreen';
 import { ToastContainer } from './components/ToastNotification';
 import { NotificationProvider } from './context/NotificationContext';
 import { getPhotoUrlCandidates } from './utils/photoStorage';
@@ -78,6 +79,34 @@ function PortfolioApp() {
   const [isNotFound, setIsNotFound] = useState<boolean>(initialMatched === null && window.location.pathname !== '/');
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const [loadProgress, setLoadProgress] = useState<number>(0);
+  const [showIntro, setShowIntro] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const search = new URLSearchParams(window.location.search);
+      if (search.get('intro') === '1') return true;
+      if (search.get('nointro') === '1') return false;
+      return sessionStorage.getItem('taher_intro_seen') !== '1';
+    } catch {
+      return true;
+    }
+  });
+  const [isIntroBlurActive, setIsIntroBlurActive] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const search = new URLSearchParams(window.location.search);
+      if (search.get('intro') === '1') return true;
+      if (search.get('nointro') === '1') return false;
+      return sessionStorage.getItem('taher_intro_seen') !== '1';
+    } catch {
+      return true;
+    }
+  });
+
+  const handleReplayIntro = () => {
+    setIsIntroBlurActive(true);
+    setShowIntro(true);
+  };
+
   const [lightboxPhoto, setLightboxPhoto] = useState<{
     fileName: string;
     title: string;
@@ -278,33 +307,55 @@ function PortfolioApp() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF9F5] dark:bg-[#121110] text-stone-900 dark:text-stone-100 transition-colors duration-300 selection:bg-[#8B1E28]/15 selection:text-[#8B1E28] dark:selection:bg-[#E11D48]/25 dark:selection:text-[#E11D48]">
+    <div className="min-h-screen flex flex-col bg-[#060606] text-[#EBE7E1] transition-colors duration-300 selection:bg-[#C17F24]/30 selection:text-[#EBE7E1]">
+      {/* John Abraham Style Intro Screen Overlay */}
+      {showIntro && (
+        <IntroScreen
+          onStartExit={() => setIsIntroBlurActive(false)}
+          onComplete={() => {
+            setIsIntroBlurActive(false);
+            setShowIntro(false);
+          }}
+        />
+      )}
+
       {/* Subtle linear progress bar at the very top of the screen */}
       <TopProgressBar
         isVisible={isNavigating}
         progress={loadProgress}
       />
 
-      {/* Navigation with Theme Switcher */}
-      <Navbar
-        activeSection={isNotFound ? '' : currentView}
-        onNavigate={handleNavigate}
-        isHomeView={currentView === 'home' && !isNotFound}
-      />
+      {/* Background Page Content — Deeply blurred, scaled and dimmed when intro is active for maximum impact */}
+      <div
+        className={`flex-1 flex flex-col transition-all duration-700 ease-out origin-center ${
+          isIntroBlurActive
+            ? 'filter blur-xl sm:blur-2xl md:blur-3xl scale-[0.985] brightness-[0.35] pointer-events-none select-none'
+            : isNavigating
+            ? 'filter blur-sm brightness-90 transition-all duration-300'
+            : 'filter blur-0 scale-100 brightness-100'
+        }`}
+      >
+        {/* Navigation with Theme Switcher & Replay Intro */}
+        <Navbar
+          activeSection={isNotFound ? '' : currentView}
+          onNavigate={handleNavigate}
+          isHomeView={currentView === 'home' && !isNotFound}
+          onReplayIntro={handleReplayIntro}
+        />
 
-      {/* Main Content Area */}
+        {/* Main Content Area */}
       <main className="flex-1">
         {isNotFound ? (
           /* 404 NOT FOUND VIEW */
           <div className="pt-32 pb-24 max-w-3xl mx-auto px-6 text-center animate-in fade-in duration-300">
-            <span className="inline-block text-xs font-mono font-bold uppercase tracking-widest text-[#8B1E28] dark:text-[#E11D48] px-3.5 py-1.5 rounded-full bg-[#8B1E28]/10 dark:bg-[#E11D48]/10 border border-[#8B1E28]/20 dark:border-[#E11D48]/20">
+            <span className="inline-block text-xs font-mono font-bold uppercase tracking-widest text-[#C17F24] px-3.5 py-1.5 rounded-full bg-[#C17F24]/10 border border-[#C17F24]/20">
               404 · Page Not Found
             </span>
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 mt-5 mb-3">
+            <h1 className="font-display text-4xl sm:text-6xl text-[#EBE7E1] tracking-wider uppercase mt-5 mb-3 font-normal">
               Lost in the Journey?
             </h1>
-            <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 max-w-md mx-auto mb-8">
-              The page at <code className="text-xs sm:text-sm font-mono bg-stone-200/70 dark:bg-stone-800 px-2 py-0.5 rounded text-stone-900 dark:text-stone-100">{window.location.pathname}</code> does not exist or has moved. Explore one of the clean paths below:
+            <p className="text-sm sm:text-base text-stone-400 max-w-md mx-auto mb-8 font-light">
+              The page at <code className="text-xs sm:text-sm font-mono bg-[#141414] border border-white/10 px-2.5 py-1 rounded text-[#EBE7E1]">{window.location.pathname}</code> does not exist or has moved. Explore one of the clean paths below:
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
               <a
@@ -315,7 +366,7 @@ function PortfolioApp() {
                     handleNavigate('home');
                   }
                 }}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-md cursor-pointer hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#C17F24] text-[#060606] text-xs font-bold hover:bg-[#E09830] transition-all shadow-md cursor-pointer hover:-translate-y-0.5 tracking-wider uppercase"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Home (/)</span>
@@ -328,7 +379,7 @@ function PortfolioApp() {
                     handleNavigate('about');
                   }
                 }}
-                className="px-4 py-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold hover:bg-stone-200 dark:hover:bg-stone-700 transition-all border border-stone-200/80 dark:border-stone-700"
+                className="px-4 py-3 rounded-xl bg-[#141414] text-stone-300 text-xs font-semibold hover:border-[#C17F24]/50 hover:text-white transition-all border border-white/10 tracking-wider uppercase"
               >
                 About (/about)
               </a>
@@ -438,9 +489,9 @@ function PortfolioApp() {
                     handleNavigate('home');
                   }
                 }}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-100 px-3.5 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200/70 dark:hover:bg-stone-700/70 transition-colors cursor-pointer border border-stone-200/70 dark:border-stone-700"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-[#8E8880] hover:text-[#EBE7E1] px-4 py-2 rounded-xl bg-[#141414] hover:bg-[#1C1C1C] hover:border-[#C17F24]/40 transition-colors cursor-pointer border border-white/10 tracking-wider uppercase font-mono"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
+                <ArrowLeft className="w-3.5 h-3.5 text-[#C17F24]" />
                 <span>Back to Full Journey (Home · /)</span>
               </a>
             </div>
@@ -491,8 +542,9 @@ function PortfolioApp() {
         )}
       </main>
 
-      {/* Footer */}
-      <Footer onNavigate={handleNavigate} />
+        {/* Footer */}
+        <Footer onNavigate={handleNavigate} onReplayIntro={handleReplayIntro} />
+      </div>
 
       {/* Lightbox Modal */}
       {lightboxPhoto && (

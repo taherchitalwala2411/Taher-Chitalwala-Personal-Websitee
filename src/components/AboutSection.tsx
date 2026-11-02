@@ -23,26 +23,26 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
   onReadMore,
 }) => {
   return (
-    <section id="about" className="py-16 md:py-22 border-t border-stone-200/80 dark:border-stone-800 bg-gradient-to-b from-[#FAF9F5] via-[#F7F4EB] to-[#FAF9F5] dark:from-[#121110] dark:via-[#161513] dark:to-[#121110] relative transition-colors duration-300">
+    <section id="about" className="py-16 md:py-24 border-t border-white/[0.07] bg-[#060606] relative transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4 pb-6 border-b border-stone-200/80 dark:border-stone-800">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4 pb-6 border-b border-white/[0.08]">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8B1E28] dark:text-[#E11D48]">
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#C17F24]">
               01 · The Personal Journey
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 dark:text-stone-50 mt-1">
+            <h2 className="font-display text-4xl sm:text-5xl tracking-[0.04em] uppercase text-[#EBE7E1] mt-2 font-normal">
               About Me
             </h2>
           </div>
-          <div className="flex items-center gap-3 text-xs text-stone-600 dark:text-stone-400 font-mono">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-[#E11D48]" />
+          <div className="flex items-center gap-3 text-xs text-[#8E8880] font-mono tracking-wider uppercase">
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-[#C17F24]" />
               <span>South Mumbai</span>
             </span>
-            <span>·</span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-stone-400 dark:text-stone-500" />
+            <span className="text-[#C17F24]">·</span>
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-[#8E8880]" />
               <span>24 November 2007</span>
             </span>
           </div>
@@ -51,7 +51,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         {/* Catchy Editorial Layout: Narrative + Pillars & Standards */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Main Story Narrative (60% width) */}
-          <div className="lg:col-span-7 space-y-5 text-stone-700 dark:text-stone-300 leading-relaxed text-base sm:text-lg">
+          <div className="lg:col-span-7 space-y-5 text-[#DCD7CE] leading-relaxed text-base sm:text-lg font-light">
             {isFullView ? (
               // Full detailed narrative
               aboutMeNarrative.map((item, idx) => (
@@ -62,7 +62,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             ) : (
               // Preview narrative
               <>
-                <p className="leading-relaxed text-stone-900 dark:text-stone-100 font-medium">
+                <p className="leading-relaxed text-[#EBE7E1] font-normal">
                   {aboutMeNarrative[0].paragraph}
                 </p>
                 <p className="leading-relaxed">
@@ -79,9 +79,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 </p>
 
                 {/* Editorial Pull Quote */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-stone-900/90 border border-stone-200/90 dark:border-stone-800 shadow-sm relative my-5 transition-colors">
-                  <Quote className="w-7 h-7 text-[#8B1E28]/15 dark:text-[#E11D48]/25 absolute top-3 right-4" />
-                  <p className="text-sm sm:text-base font-serif italic text-stone-900 dark:text-stone-100 leading-relaxed pr-6">
+                <div className="p-6 sm:p-7 rounded-2xl bg-[#121110] border border-white/10 shadow-lg relative my-6 transition-colors">
+                  <Quote className="w-8 h-8 text-[#C17F24]/30 absolute top-4 right-5" />
+                  <p className="text-base sm:text-lg font-serif italic text-[#DCD7CE] leading-relaxed pr-6 font-light">
                     “{aboutMeNarrative[5].paragraph}”
                   </p>
                 </div>
@@ -96,7 +96,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                           onReadMore();
                         }
                       }}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold hover:bg-stone-800 dark:hover:bg-white/90 transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#C17F24] hover:bg-[#E09830] text-[#060606] text-xs font-bold transition-all shadow-[0_0_20px_rgba(193,127,36,0.25)] cursor-pointer hover:-translate-y-0.5 tracking-wider uppercase font-mono"
                     >
                       <span>Read Complete Story</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -107,15 +107,15 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             )}
 
             {isFullView && (
-              <div className="mt-8 p-6 sm:p-8 rounded-2xl bg-stone-900 dark:bg-stone-950 text-stone-100 border border-stone-800 space-y-3 shadow-md">
-                <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
+              <div className="mt-8 p-6 sm:p-8 rounded-2xl bg-[#121110] text-[#EBE7E1] border border-[#C17F24]/30 space-y-3 shadow-xl">
+                <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#C17F24] font-bold flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Guiding Philosophy</span>
                 </span>
-                <p className="text-xl sm:text-2xl font-serif italic text-white">
-                  “Be the best, beat the best.”
+                <p className="text-2xl sm:text-3xl font-serif italic text-[#C17F24] font-light">
+                  “Be the best so that you can beat the best.”
                 </p>
-                <p className="text-xs text-stone-300 leading-relaxed pt-1">
+                <p className="text-xs text-stone-400 leading-relaxed pt-1 font-light">
                   A personal standard to never settle for complacency, to embrace challenges with humility, and to strive for constant progress each day.
                 </p>
               </div>
@@ -125,66 +125,66 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           {/* Right Column: Editorial Journey Spotlight & Ambition Pillars */}
           <div className="lg:col-span-5 space-y-4">
             {/* Guiding Philosophy Hero Box */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-stone-900 to-stone-950 text-stone-100 border border-stone-800 shadow-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B1E28]/20 rounded-full blur-2xl pointer-events-none" />
+            <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-[#16130F] to-[#0D0B08] text-[#EBE7E1] border border-[#C17F24]/35 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-[#C17F24]/15 rounded-full blur-2xl pointer-events-none" />
               <div className="relative z-10">
-                <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5 mb-2">
+                <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#C17F24] font-bold flex items-center gap-1.5 mb-2">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Personal Creed</span>
                 </span>
-                <h3 className="text-2xl font-serif italic text-white leading-tight">
-                  “Be the best, beat the best.”
+                <h3 className="text-2xl sm:text-3xl font-serif italic text-[#C17F24] leading-tight font-light">
+                  “Be the best so that you can beat the best.”
                 </h3>
-                <p className="text-xs text-stone-300 leading-relaxed mt-3">
+                <p className="text-xs text-stone-300 leading-relaxed mt-3 font-light">
                   Not about arrogance, but an unwavering personal standard to hold myself accountable, outgrow my limits, and give my 100% every single day.
                 </p>
               </div>
             </div>
 
             {/* Background & Values Card */}
-            <div className="bg-white/95 dark:bg-stone-900/90 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-md p-5 space-y-3.5 backdrop-blur-xs transition-colors">
-              <span className="text-xs font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 font-bold block">
+            <div className="bg-[#121110] rounded-2xl border border-white/10 shadow-xl p-5 space-y-3.5 backdrop-blur-xs transition-colors">
+              <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#8E8880] font-bold block">
                 Foundations & Milestones
               </span>
 
               <div className="space-y-3">
-                <div className="p-3.5 rounded-xl bg-stone-50/90 dark:bg-stone-800/60 border border-stone-200/70 dark:border-stone-700/60 flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-stone-200/70 dark:bg-stone-700/70 text-[#8B1E28] dark:text-[#E11D48] shrink-0 mt-0.5">
+                <div className="p-3.5 rounded-xl bg-[#181818] border border-white/5 flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-[#201D18] text-[#C17F24] shrink-0 mt-0.5 border border-[#C17F24]/20">
                     <GraduationCap className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                    <p className="text-xs font-bold text-[#EBE7E1] tracking-wide">
                       Academic Rigor & Leadership
                     </p>
-                    <p className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5 leading-snug">
+                    <p className="text-[11px] text-stone-400 mt-0.5 leading-snug font-light">
                       Saifi High School Head Boy & SSC Topper (92.4%), K.C. College HSC (89.67%), and currently Second Year BBA in Digital Business.
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-stone-50/90 dark:bg-stone-800/60 border border-stone-200/70 dark:border-stone-700/60 flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-stone-200/70 dark:bg-stone-700/70 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5">
+                <div className="p-3.5 rounded-xl bg-[#181818] border border-white/5 flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-[#201D18] text-[#C17F24] shrink-0 mt-0.5 border border-[#C17F24]/20">
                     <Building className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                    <p className="text-xs font-bold text-[#EBE7E1] tracking-wide">
                       Family Enterprise & New Ventures
                     </p>
-                    <p className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5 leading-snug">
+                    <p className="text-[11px] text-stone-400 mt-0.5 leading-snug font-light">
                       Committed to scaling his father's sanitary ware enterprise while exploring new ventures in digital business and real estate properties.
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-stone-50/90 dark:bg-stone-800/60 border border-stone-200/70 dark:border-stone-700/60 flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-stone-200/70 dark:bg-stone-700/70 text-emerald-700 dark:text-emerald-400 shrink-0 mt-0.5">
+                <div className="p-3.5 rounded-xl bg-[#181818] border border-white/5 flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-[#201D18] text-[#C17F24] shrink-0 mt-0.5 border border-[#C17F24]/20">
                     <TrendingUp className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                    <p className="text-xs font-bold text-[#EBE7E1] tracking-wide">
                       Continuous Growth Mindset
                     </p>
-                    <p className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5 leading-snug">
+                    <p className="text-[11px] text-stone-400 mt-0.5 leading-snug font-light">
                       Exploring what I am capable of every single day, balancing curiosity, humility, and relentless ambition.
                     </p>
                   </div>

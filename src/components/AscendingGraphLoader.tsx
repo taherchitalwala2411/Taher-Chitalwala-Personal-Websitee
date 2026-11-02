@@ -74,8 +74,8 @@ export const AscendingGraphLoader: React.FC<AscendingGraphLoaderProps> = ({
                   }}
                   className={`w-full rounded-t-sm transition-all ${
                     isFilled
-                      ? 'bg-gradient-to-t from-[#8B1E28] to-[#E11D48] shadow-[0_0_8px_rgba(225,29,72,0.6)]'
-                      : 'bg-stone-700/40'
+                      ? 'bg-gradient-to-t from-[#9E641B] to-[#C17F24] shadow-[0_0_8px_rgba(193,127,36,0.6)]'
+                      : 'bg-stone-800/60'
                   }`}
                 />
               </div>

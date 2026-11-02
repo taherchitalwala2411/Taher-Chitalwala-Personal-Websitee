@@ -102,12 +102,12 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Control Bar */}
-        <div className="p-3.5 sm:p-4 bg-stone-950 border-b border-stone-800 flex items-center justify-between gap-3 text-xs text-stone-300">
+        <div className="p-3.5 sm:p-4 bg-[#080808] border-b border-white/10 flex items-center justify-between gap-3 text-xs text-[#EBE7E1]">
           <div className="flex items-center gap-2 overflow-hidden">
-            <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-stone-800 text-stone-300 font-semibold shrink-0">
+            <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-[#181716] border border-[#C17F24]/40 text-[#E09830] font-semibold shrink-0">
               {category || currentPhotoMeta?.category || (isTopShowcase ? 'Top Showcase' : 'Visual Archive')}
             </span>
-            <span className="font-mono text-[11px] text-stone-400 truncate hidden sm:inline">
+            <span className="font-mono text-[11px] text-[#8E8880] truncate hidden sm:inline">
               {fileName}
             </span>
           </div>
@@ -115,7 +115,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
           <div className="flex items-center gap-2">
             {/* Show Small Screen / Full Screen options ONLY for Achievements, Gallery, etc., NOT Top Showcase */}
             {!isTopShowcase && (
-              <div className="inline-flex items-center p-0.5 rounded-xl bg-stone-900 border border-stone-800 shadow-xs">
+              <div className="inline-flex items-center p-0.5 rounded-xl bg-[#141414] border border-white/10 shadow-xs">
                 {/* Option 1: Small Screen where huge image appears completely */}
                 <button
                   type="button"
@@ -124,8 +124,8 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
                   aria-label="Small Screen (image fully visible, frame a bit empty)"
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     isContain
-                      ? 'bg-white text-stone-950 shadow-xs font-bold'
-                      : 'text-stone-400 hover:text-stone-200'
+                      ? 'bg-[#C17F24] text-[#060606] shadow-xs font-bold'
+                      : 'text-[#8E8880] hover:text-white'
                   }`}
                 >
                   <Square className="w-3.5 h-3.5" />
@@ -140,8 +140,8 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
                   aria-label="Full Screen (fits whole frame, cropped if too large)"
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     !isContain
-                      ? 'bg-white text-stone-950 shadow-xs font-bold'
-                      : 'text-stone-400 hover:text-stone-200'
+                      ? 'bg-[#C17F24] text-[#060606] shadow-xs font-bold'
+                      : 'text-[#8E8880] hover:text-white'
                   }`}
                 >
                   <Scan className="w-3.5 h-3.5" />
@@ -154,7 +154,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-white transition-colors cursor-pointer ml-1"
+              className="p-1.5 rounded-lg bg-[#141414] hover:bg-[#222] border border-white/10 text-[#8E8880] hover:text-white transition-colors cursor-pointer ml-1"
               aria-label="Close and return to page"
               title="Close"
             >
@@ -237,14 +237,14 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         </div>
 
         {/* Caption Bar with Alt Description Display for Blind / Accessibility Users */}
-        <div className="p-4 sm:p-5 bg-stone-950 border-t border-stone-800">
+        <div className="p-4 sm:p-5 bg-[#080808] border-t border-white/10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white">
+              <h3 className="text-base sm:text-lg font-display uppercase tracking-wider text-white">
                 {title}
               </h3>
               {currentPhotoMeta?.description && (
-                <p className="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#8E8880] mt-1 leading-relaxed">
                   {currentPhotoMeta.description}
                 </p>
               )}
@@ -253,7 +253,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
             {/* Screen Mode Indicator for Gallery and Achievements */}
             {!isTopShowcase && (
               <div className="shrink-0 flex items-center gap-2">
-                <span className="text-[10px] font-mono px-2 py-1 rounded bg-stone-900 border border-stone-800 text-stone-400">
+                <span className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-[#141414] border border-white/10 text-[#C17F24]">
                   {isContain ? 'Small Screen (Complete Image)' : 'Full Screen (Full Frame)'}
                 </span>
               </div>
@@ -261,7 +261,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
           </div>
 
           {currentPhotoMeta?.altText && (
-            <p className="text-[11px] text-stone-400 mt-2 font-sans italic border-l-2 border-stone-700 pl-2">
+            <p className="text-[11px] text-[#8E8880] mt-2 font-sans italic border-l-2 border-[#C17F24]/50 pl-2">
               Alt text description for blind users: {currentPhotoMeta.altText}
             </p>
           )}
@@ -275,7 +275,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
               const prev = galleryPhotos[currentIndex - 1];
               onSelectPhoto(prev.fileName, prev.title, prev.category, source);
             }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-stone-900/85 hover:bg-stone-900 text-white transition-colors cursor-pointer shadow-lg border border-stone-700/60"
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-[#121110]/90 hover:bg-[#1a1a1a] text-[#C17F24] hover:text-[#E09830] transition-colors cursor-pointer shadow-2xl border border-white/10"
             aria-label="Previous photograph"
             title="Previous photograph"
           >
@@ -290,7 +290,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
               const next = galleryPhotos[currentIndex + 1];
               onSelectPhoto(next.fileName, next.title, next.category, source);
             }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-stone-900/85 hover:bg-stone-900 text-white transition-colors cursor-pointer shadow-lg border border-stone-700/60"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-[#121110]/90 hover:bg-[#1a1a1a] text-[#C17F24] hover:text-[#E09830] transition-colors cursor-pointer shadow-2xl border border-white/10"
             aria-label="Next photograph"
             title="Next photograph"
           >
